@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HEBEC Books – Tủ sách</title>
+
+  <!-- NẠP FONT INTER TỪ GOOGLE FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{--green:#2f9e44;--green2:#176b2c;--green3:#e9f7eb;--yellow:#f2c94c;--red:#e53935;--ink:#263238;--muted:#777;--line:#e7eaec;--bg:#f6f7f8;--white:#fff}
+    *{box-sizing:border-box}
+
+    /* ÁP DỤNG FONT INTER CHO TOÀN TRANG WEB */
+    body{margin:0;background:var(--bg);font-family:'Inter',Arial,Helvetica,sans-serif;color:var(--ink);font-size:14px;line-height:1.4}
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font-family:'Inter',Arial,Helvetica,sans-serif}
+    .container{width:min(1180px,calc(100% - 30px));margin:auto}
+
+    .header-top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;box-shadow:0 2px 8px #00000008}.navbar-top{min-height:78px}.navbar-inner{height:78px;display:flex;align-items:center;gap:22px}.logo{width:190px;display:flex;align-items:center}.logo img{width:178px;height:auto}.line-box{height:38px;width:1px;background:#ddd}.top-links{display:flex;align-items:stretch;gap:4px;flex:1}.top-links a{padding:13px 17px;text-align:center;color:#4a4a4a;font-size:15px;font-weight:600;border-radius:6px}.top-links a:hover,.top-links a.active{color:var(--green2);background:var(--green3)}.top-icon{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--green2);cursor:pointer}.mobile-menu{display:none}
+
+    .shopbar{background:#fff;border-bottom:1px solid var(--line)}.shopbar-inner{display:flex;align-items:center;gap:14px;min-height:64px}.category-toggle{background:var(--green2);color:#fff;border:0;padding:12px 18px;border-radius:5px;font-weight:700;cursor:pointer}.search{display:flex;flex:1;max-width:590px;border:1px solid #d8dde0;background:#fff;border-radius:5px;overflow:hidden;height:42px}.search input{flex:1;border:0;outline:0;padding:0 14px}.search button{width:50px;border:0;background:var(--green);color:#fff;cursor:pointer}.shop-actions{margin-left:auto;display:flex;gap:9px}.shop-action{border:1px solid var(--line);background:#fff;color:#555;border-radius:5px;padding:9px 12px;cursor:pointer}.cart-badge{background:var(--red);color:#fff;border-radius:12px;padding:2px 6px;font-size:11px}
+
+    .page{padding:22px 0 45px}.section{margin-bottom:30px}.section-title{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}.title-left small{display:block;color:#8a8a8a;font-size:13px;margin-bottom:3px}.title-left span{display:block;font-size:24px;font-weight:700}.right-button{border:1px solid var(--line);background:#fff;color:var(--green2);padding:8px 14px;border-radius:4px;font-size:13px}.category-row{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}.category{background:#fff;border:1px solid var(--line);min-height:106px;border-radius:5px;padding:12px 8px;text-align:center;transition:.2s;cursor:pointer}.category:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 5px 14px #0000000d}.category img{width:45px;height:45px;margin:2px auto 8px;display:block}.category span{font-size:13px;line-height:1.35;display:block}.category.active{border-color:var(--green);box-shadow:inset 0 3px 0 var(--green)}
+
+    .banner{background:linear-gradient(100deg,var(--green2),var(--green));border-radius:7px;color:#fff;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;gap:25px}.banner h1{margin:0 0 7px;font-size:29px}.banner p{margin:0;color:#eaf7ed;line-height:1.5}.banner .banner-btn{background:#fff;color:var(--green2);padding:10px 16px;border-radius:4px;font-weight:700;white-space:nowrap}
+
+    .books-section{background:#fff;border:1px solid var(--line);padding:20px 18px;border-radius:5px}.catalog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.catalog-head .title-left span{font-size:22px}.catalog-tools{display:flex;gap:8px}.select{border:1px solid var(--line);background:#fff;border-radius:4px;padding:8px 10px;color:#555}.list-catalog{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.product-box{background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;height:100%;display:flex;flex-direction:column}.pi-pic{display:block;position:relative;width:100%;padding-top:100%;background:#f2f4f5;border-bottom:1px solid var(--line);overflow:hidden}.pi-pic img{position:absolute;inset:8%;width:84%;height:84%;object-fit:contain;transition:.25s}.product-box:hover .pi-pic img{transform:scale(1.04)}.product-desc{padding:13px 14px 15px;display:flex;flex-direction:column;flex:1}.product-desc .text-muted{font-size:12px;color:#888;margin-bottom:6px}.product-name{font-size:15px;font-weight:600;line-height:1.45;min-height:44px;margin-bottom:10px}.book-price{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.price{font-weight:700;color:var(--red);font-size:16px}.buy{border:0;background:var(--green);color:#fff;border-radius:4px;padding:8px 10px;cursor:pointer}.buy:hover{background:var(--green2)}.empty{grid-column:1/-1;padding:40px;text-align:center;color:#888}
+
+    .pagination{display:flex;justify-content:center;gap:6px;margin-top:20px}.pagination button{min-width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer}.pagination button.active,.pagination button:hover{background:var(--green);border-color:var(--green);color:#fff}
+
+    .overlay{position:fixed;inset:0;background:#0006;z-index:50;display:none}.cart{position:fixed;right:0;top:0;width:min(420px,92vw);height:100%;background:#fff;z-index:51;transform:translateX(100%);transition:.25s;display:flex;flex-direction:column}.cart.open{transform:translateX(0)}.overlay.open{display:block}.cart-head{background:var(--green2);color:#fff;padding:18px;display:flex;justify-content:space-between;align-items:center}.cart-head button{background:none;border:0;color:#fff;font-size:25px;cursor:pointer}.cart-body{padding:16px;overflow:auto;flex:1}.cart-item{display:grid;grid-template-columns:58px 1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.cart-item img{width:58px;height:58px;object-fit:contain;background:#f4f5f5}.qty{display:flex;align-items:center;gap:7px;margin-top:7px}.qty button{width:25px;height:25px;border:1px solid var(--line);background:#fff;cursor:pointer}.cart-foot{padding:16px;border-top:1px solid var(--line)}.checkout{width:100%;padding:12px;border:0;border-radius:4px;background:var(--green);color:#fff;font-weight:700;cursor:pointer}.checkout:hover{background:var(--green2)}
+
+    .footer{background:#123f1f;color:#dcefe0;padding:32px 0}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:35px}.footer h3{color:#fff;margin-top:0}.footer p,.footer li{font-size:13px;line-height:1.7}.footer ul{list-style:none;padding:0;margin:0}
+
+    .center-widget{width:min(1180px,calc(100% - 30px));margin:0 auto;display:flex;align-items:center;min-height:78px}
+    .navbar-top{background:#fff}.navbar-top .logo{width:185px;flex:none}.navbar-top .logo img{width:170px;max-height:52px;object-fit:contain}.nav-links{display:flex;list-style:none;margin:0;padding:0;align-items:center}.nav-links li a{display:block;padding:29px 17px 25px;font-size:15px;font-weight:600;color:#555;position:relative}.nav-links li a:after{content:"";position:absolute;left:16px;right:16px;bottom:0;height:3px;background:transparent;border-radius:3px}.nav-links li.active a,.nav-links li a:hover{color:var(--green2)}.nav-links li.active a:after,.nav-links li a:hover:after{background:var(--green)}.size-box{flex:1}.mobile-nav{display:none!important}.navbar-top-links{display:block}.shopbar{box-shadow:0 1px 4px #0000000a}.shopbar-inner{min-height:66px}.catalog-menu{position:relative}.category-toggle{border-radius:3px;min-width:145px;text-align:left;padding:11px 16px;background:var(--green2)}.search{height:42px;border-radius:3px;max-width:650px}.search-icon{display:flex;align-items:center;padding-left:13px;color:#8b9398;font-size:20px}.search input{padding-left:8px}.search button{width:88px;background:var(--green2);font-size:13px;font-weight:600}.shop-action{border-radius:3px;padding:9px 14px}.navbar-cart{flex:none;white-space:nowrap}.category-section{background:transparent;border:0;padding:0}.container-inner{width:100%}.section-title{margin-bottom:20px}.section-title .title-left span{font-size:22px}.right-button{border:1px solid var(--line);border-radius:3px;padding:0;background:#fff}.right-button a{display:block;padding:8px 14px;color:var(--green2)}.category-catalog{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}.category-item{background:#fff;border:1px solid var(--line);min-height:108px;padding:13px 8px;text-align:center;cursor:pointer;transition:.2s;position:relative}.category-item:before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:transparent}.category-item:hover,.category-item.active{border-color:#b9d9c0;box-shadow:0 4px 12px #0000000b}.category-item.active:before{background:var(--green)}.category-item img{width:44px;height:44px;object-fit:contain;display:block;margin:2px auto 9px}.category-item span{font-size:12.5px;line-height:1.35;display:block;color:#555}.books-section{border-radius:0;border:0;padding:0;background:transparent}.catalog-title{background:#fff;border-bottom:1px solid var(--line);padding:15px 18px;margin-bottom:0}.list-catalog{margin:0 -8px}.list-catalog > .col-xs-6{width:25%;padding:8px}.ibox{background:transparent;margin-bottom:0}.ibox-content{padding:0;background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden}.product-box{border:0;box-shadow:none}.list-catalog .product-box .pi-pic{padding-top:100%;border-bottom:1px solid #e7eaec;background:#f7f8f8}.list-catalog .product-box .pi-pic img{position:absolute;inset:6%;width:88%;height:88%;object-fit:contain}.product-desc{padding:12px 13px 14px;min-height:148px}.product-desc .text-muted{color:#888;font-size:12px}.product-name{font-size:14px;font-weight:600;color:#333}.book-price{margin-top:auto}.price{color:var(--red)}.buy{background:var(--green2);border-radius:3px}.buy:hover{background:var(--green)}.pagination{padding-bottom:8px}.pagination button{border-radius:2px}.pagination button.active,.pagination button:hover{background:var(--green2);border-color:var(--green2)}
+
+    .list-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;margin:0}
+    .list-catalog>.col-xs-6{width:auto;min-width:0;padding:0}
+    .header-top{background:var(--green2);border-bottom-color:#ffffff26}
+    .navbar-top{background:var(--green2)}
+    .line-box{background:#ffffff55}
+    .nav-links li a{color:#fff}
+    .nav-links li.active a,.nav-links li a:hover{color:#fff;background:#ffffff12}
+    .nav-links li.active a:after,.nav-links li a:hover:after{background:var(--yellow)}
+    .navbar-top .logo-color{display:inline-flex;align-items:center;background:transparent;padding:0;border-radius:0}
+    .navbar-top .logo img{display:block}
+
+    .product-detail[hidden]{display:none}
+    .product-detail{padding-top:4px;padding-bottom:28px}
+    .detail-back{border:0;background:transparent;color:var(--green2);padding:8px 0;margin-bottom:12px;cursor:pointer;font-weight:600}
+    .detail-crumb{display:flex;gap:8px;align-items:center;color:#888;font-size:13px;margin-bottom:20px}
+    .detail-crumb a{color:var(--green2)}
+    .detail-crumb span:last-child{color:var(--ink)}
+    .detail-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:36px;align-items:start}
+    .detail-media{min-height:430px;background:#fff;border:1px solid var(--line);padding:22px;display:flex;align-items:center;justify-content:center}
+    .detail-media img{display:block;width:min(100%,360px);height:430px;object-fit:contain}
+    .detail-info{padding:8px 0}
+    .detail-category{display:inline-block;color:var(--green2);font-size:13px;font-weight:700}
+    .detail-info h1{font-size:25px;line-height:1.4;margin:10px 0 12px}
+    .detail-price{font-size:24px;font-weight:700;color:var(--red);margin:0 0 20px}
+    .detail-description{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;margin:0 0 20px;color:#60696d;line-height:1.65}
+    .detail-description p{margin:6px 0 0}
+    .detail-purchase{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .detail-quantity{height:42px;display:flex;border:1px solid #d8dde0;border-radius:4px;overflow:hidden}
+    .detail-quantity button{width:40px;border:0;background:#f7f8f8;cursor:pointer;color:var(--ink);font-size:18px}
+    .detail-quantity input{width:52px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;outline:0}
+    .detail-add{min-height:42px;border:0;border-radius:4px;background:var(--green2);color:#fff;padding:0 20px;font-weight:700;cursor:pointer}
+    .detail-add:hover{background:var(--green)}
+
+    .news-section{margin-top:12px}
+    .news-section .section-title{align-items:center}
+    .news-more{border:1px solid var(--line);padding:8px 12px;color:var(--green2);font-size:13px;white-space:nowrap}
+    .news-tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin:0 0 16px}
+    .news-tab{display:flex;align-items:center;gap:7px;white-space:nowrap;border:0;border-bottom:2px solid transparent;background:transparent;padding:10px 12px;color:#70777b;cursor:pointer}
+    .news-tab[aria-selected="true"]{color:var(--green2);border-bottom-color:var(--green);font-weight:700}
+    .news-tab-count{font-size:11px;font-weight:600;color:#888}
+    .news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .news-card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;transition:.18s}
+    .news-card:hover{border-color:#acd1b3;transform:translateY(-2px)}
+    .news-card-link{height:100%;display:flex;flex-direction:column;color:inherit}
+    .news-art{height:158px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:17px 18px;color:#fff}
+    .news-art-payment{background:#176b2c}.news-art-order{background:#246d75}.news-art-refund{background:#a34c3c}.news-art-warranty{background:#a96c14}.news-art-exchange{background:#465c70}
+    .news-art-kicker{font-size:11px;font-weight:700;text-transform:uppercase}
+    .news-art-title{font-size:23px;line-height:1.1;font-weight:700;max-width:75%}
+    .news-art-index{align-self:flex-end;font-size:12px;font-weight:700}
+    .news-card-body{display:flex;flex:1;flex-direction:column;padding:14px}
+    .news-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;color:#858b8e;font-size:11px}
+    .news-tag{color:var(--green2);font-weight:700}
+    .news-card h3{margin:0 0 8px;font-size:15px;line-height:1.45}
+    .news-summary{margin:0 0 14px;color:#697175;font-size:13px;line-height:1.55;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+    .news-read{margin-top:auto;color:var(--green2);font-size:13px;font-weight:700}
+    .news-detail[hidden]{display:none}
+    .news-detail{padding-top:12px;padding-bottom:48px}
+    .news-detail-back{border:0;background:transparent;color:var(--green2);font-size:13px;font-weight:700;padding:8px 0;margin-bottom:12px;cursor:pointer}
+    .news-detail-breadcrumb{display:flex;flex-wrap:wrap;gap:8px;color:#848b8e;font-size:12px;margin-bottom:24px}
+    .news-detail-breadcrumb a{color:var(--green2)}
+    .news-detail-header{max-width:920px;margin:0 auto 28px}
+    .news-detail-header h1{font-size:32px;line-height:1.25;margin:10px 0 14px}
+    .news-detail-byline{display:flex;align-items:center;gap:12px;color:#777;font-size:13px}
+    .news-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:38px;align-items:start;max-width:1040px;margin:auto}
+    .news-detail-cover{height:230px;margin-bottom:24px;padding:25px 28px}
+    .news-detail-lead{font-size:17px;line-height:1.7;color:#424c50;margin:0 0 22px}
+    .news-toc{background:#f2f6f3;padding:18px 22px;margin:0 0 24px;border-left:3px solid var(--green)}
+    .news-toc h2{font-size:15px;margin:0 0 10px}
+    .news-toc ol{padding-left:20px;margin:0}
+    .news-toc li{padding:4px 0;color:var(--green2);font-size:14px}
+    .news-body-section{padding:18px 0;border-top:1px solid var(--line)}
+    .news-body-section h2{font-size:21px;line-height:1.35;margin:0 0 12px}
+    .news-body-section p,.news-body-section li{font-size:15px;line-height:1.75;color:#4f595d}
+    .news-related{border-top:2px solid var(--green);padding-top:14px}
+    .news-related h2{font-size:17px;margin:0 0 8px}
+    .news-related-link{display:block;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+    .news-related-link span{display:block;color:#7c8589;font-weight:400;font-size:11px;margin-top:5px}
+
+    .category-catalog{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:4px;margin:0}
+    .category-item[hidden]{display:none}
+    .category-item{appearance:none;box-sizing:border-box;position:relative;flex:0 0 164px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:13px 10px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);text-align:center;transition:.18s}
+    #categoryRow .category-item:hover,#categoryRow .category-item.active{border-color:var(--green2);background:var(--green2);color:#fff;box-shadow:0 8px 22px #176b2c38}
+    .category-icon-wrap{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#eff7f0;color:var(--green2)}
+    .category-icon-wrap .category-icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    #categoryRow .category-item:hover .category-label,#categoryRow .category-item.active .category-label{color:#fff}
+    #categoryRow .category-item:hover .category-icon-wrap,#categoryRow .category-item.active .category-icon-wrap{background:#fff;color:var(--green2);transform:scale(1.06)}
+    .category-label{font-size:13px;line-height:1.3}
+    .category-pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}
+    .category-pager-arrow{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--green2);font-size:19px;cursor:pointer}
+    .category-pager-arrow:hover:not(:disabled){border-color:var(--green2);background:var(--green2);color:#fff}
+    .category-pager-arrow:disabled{opacity:.4;cursor:default}
+    .category-pager-dots{display:flex;align-items:center;gap:7px}
+    .category-pager-dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:#c7d7ca;cursor:pointer}
+    .category-pager-dot.active{width:22px;border-radius:6px;background:var(--green2)}
+
+    .campaign-carousel{position:relative;aspect-ratio:1261/552;margin-bottom:26px;overflow:hidden;border-radius:5px;background:#e9f7eb}
+    .campaign-slides{position:absolute;inset:0}
+    .campaign-slide{position:absolute;inset:0;display:block;visibility:hidden;opacity:0;transition:opacity .8s cubic-bezier(.22,.61,.36,1);pointer-events:none}
+    .campaign-slide.active{z-index:1;visibility:visible;opacity:1;pointer-events:auto}
+    .campaign-slide img{display:block;width:100%;height:100%;object-fit:contain;background:#e9f7eb}
+    .campaign-arrow,.campaign-pause{position:absolute;z-index:2;display:grid;place-items:center;border:1px solid #ffffff88;border-radius:50%;background:#123f1f99;color:#fff;cursor:pointer}
+    .campaign-arrow{top:50%;width:42px;height:42px;font-size:28px;transform:translateY(-50%)}
+    .campaign-prev{left:14px}.campaign-next{right:14px}
+    .campaign-pause{top:12px;right:12px;width:34px;height:34px;font-size:14px}
+    .campaign-dots{position:absolute;z-index:2;bottom:12px;left:50%;display:flex;gap:7px;transform:translateX(-50%)}
+    .campaign-dot{width:9px;height:9px;padding:0;border:1px solid #fff;border-radius:50%;background:#ffffff88;cursor:pointer}
+    .campaign-dot.active{width:24px;border-radius:8px;background:#fff}
+
+    /* STYLES MODAL THANH TOÁN (CHECKOUT) */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:60;display:none;align-items:center;justify-content:center;padding:15px;backdrop-filter:blur(3px)}
+    .modal-overlay.open{display:flex}
+    .checkout-modal{background:#fff;border-radius:8px;width:min(560px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,0.2);border:1px solid var(--line);display:flex;flex-direction:column}
+    .checkout-head{background:var(--green2);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+    .checkout-head h3{margin:0;font-size:17px;font-weight:700}
+    .checkout-head button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+    .checkout-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+    .form-group{display:flex;flex-direction:column;gap:5px}
+    .form-group label{font-size:13px;font-weight:600;color:var(--ink)}
+    .form-group input,.form-group select,.form-group textarea{border:1px solid #d8dde0;border-radius:4px;padding:9px 12px;font-size:13px;outline:none;background:#fff}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(47,158,68,0.15)}
+    .order-summary-box{background:var(--green3);border:1px solid #ccebd3;border-radius:6px;padding:12px 15px;font-size:13px;color:var(--green2)}
+    .order-summary-box h4{margin:0 0 8px;font-size:14px}
+    .checkout-foot{padding:15px 20px;border-top:1px solid var(--line);background:#fafafa;display:flex;gap:10px;justify-content:flex-end}
+    .btn-submit-order{background:var(--green2);color:#fff;border:0;border-radius:4px;padding:11px 20px;font-weight:700;cursor:pointer;flex:1}
+    .btn-submit-order:hover{background:var(--green)}
+    .btn-cancel-order{background:#fff;color:#555;border:1px solid var(--line);border-radius:4px;padding:11px 16px;font-weight:600;cursor:pointer}
+  </style>
+</head>
+<body>
+
+<header class="header-top">
+  <nav class="navbar-top" role="navigation">
+    <div class="container center-widget">
+      <div class="logo">
+        <a class="logo-color" href="#top"><img src="/Websie_banhang/assets/brand/logo.png" alt="HEBEC Books" onerror="this.src='/Websie_banhang/assets/brand/logo-2.png'"></a>
+      </div>
+      <div class="line-box sm-hidden"></div>
+      <div class="navbar-top-links sm-hidden">
+        <ul class="nav-links">
+          <li class="menu-home active"><a href="#top"><span>Trang chủ</span></a></li>
+          <li class="menu-books"><a href="#tu-sach"><span>Tủ sách</span></a></li>
+          <li class="menu-share"><a href="#bai-viet"><span>Tin tức &amp; Hoạt động</span></a></li>
+          <li class="menu-about"><a href="#gioi-thieu"><span>Giới thiệu</span></a></li>
+        </ul>
+      </div>
+      <div class="size-box sm-hidden"></div>
+      <button class="shop-action navbar-cart" type="button" onclick="openCart()" aria-label="Mở giỏ hàng">🛒 <span>Giỏ hàng</span> <span class="cart-badge" id="badge">0</span></button>
+      <div class="navbar-top-links mobile-nav">
+        <div class="navbar-top-links-menu">
+          <a class="navbar-top-item tab-home active" href="#top"><span class="nav-icon">⌂</span><div class="menu-name">Trang chủ</div></a>
+          <a class="navbar-top-item tab-books" href="#tu-sach"><span class="nav-icon">▤</span><div class="menu-name">Tủ sách</div></a>
+          <a class="navbar-top-item tab-share" href="#bai-viet"><span class="nav-icon">▱</span><div class="menu-name">Bài viết</div></a>
+          <a class="navbar-top-item tab-about" href="#gioi-thieu"><span class="nav-icon">ⓘ</span><div class="menu-name">Giới thiệu</div></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="shopbar"><div class="container shopbar-inner">
+  <div class="catalog-menu"><button class="category-toggle" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">☰ <span>DANH MỤC</span></button></div>
+  <div class="search"><span class="search-icon">⌕</span><input id="search" placeholder="Tìm sách, môn học, tác giả..." oninput="renderProducts()"><button onclick="document.getElementById('search').focus()">Tìm kiếm</button></div>
+</div></div>
+
+<main id="top" class="page"><div id="storeView" class="container">
+  <section class="campaign-carousel" id="campaignCarousel" aria-label="Quảng cáo HEBEC Books">
+    <div class="campaign-slides" id="campaignSlides"></div>
+    <button class="campaign-arrow campaign-prev" type="button" onclick="changeCampaign(-1)">‹</button>
+    <button class="campaign-arrow campaign-next" type="button" onclick="changeCampaign(1)">›</button>
+    <button class="campaign-pause" id="campaignPause" type="button" onclick="toggleCampaignAutoplay()">Ⅱ</button>
+    <div class="campaign-dots" id="campaignDots"></div>
+  </section>
+
+  <section id="categories" class="books-section category-section section">
+    <div class="container-inner">
+      <div class="section-title">
+        <div class="title-left"><small>Danh mục</small><span>Danh mục sách</span></div>
+        <div class="right-button"><button class="category-more" type="button" onclick="changeCategoryPage(1)">Xem thêm <span aria-hidden="true">→</span></button></div>
+      </div>
+      <div class="category-catalog" id="categoryRow"></div>
+      <div class="category-pager" id="categoryPager"></div>
+    </div>
+  </section>
+
+  <section id="tu-sach" class="books-section section">
+    <div class="container-inner">
+      <div class="section-title catalog-title">
+        <div class="title-left"><small>Tủ sách</small><span id="catalogHeading">Tất cả sản phẩm</span></div>
+        <div class="catalog-tools"><select class="select" id="sort" onchange="renderProducts()"><option value="default">Mới / nổi bật</option><option value="low">Giá thấp → cao</option><option value="high">Giá cao → thấp</option><option value="name">Tên A → Z</option></select></div>
+      </div>
+      <div id="productGrid" class="row list-catalog"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </section>
+
+  <section id="bai-viet" class="section news-section">
+    <div class="section-title">
+      <div class="title-left"><small>Tin tức &amp; hoạt động</small><span>5 bài viết mới nhất</span></div>
+      <a class="news-more" href="https://hebecbooks.vn/tin-tuc-su-kien" target="_blank" rel="noopener noreferrer">Xem tất cả</a>
+    </div>
+    <div class="news-tabs" role="tablist">
+      <button class="news-tab" type="button" role="tab" aria-selected="true" onclick="selectNewsTab('all',this)">Tất cả bài viết <span class="news-tab-count">5</span></button>
+      <button class="news-tab" type="button" role="tab" aria-selected="false" onclick="selectNewsTab('guide',this)">Hướng dẫn <span class="news-tab-count">2</span></button>
+      <button class="news-tab" type="button" role="tab" aria-selected="false" onclick="selectNewsTab('policy',this)">Chính sách <span class="news-tab-count">3</span></button>
+    </div>
+    <div class="news-grid" id="newsGrid"></div>
+  </section>
+</div>
+
+  <section id="productDetailView" class="container product-detail" hidden></section>
+  <section id="newsDetailView" class="container news-detail" hidden></section>
+</main>
+
+<footer id="gioi-thieu" class="footer"><div class="container footer-grid"><div><h3>HEBEC Books</h3><p>Tủ sách giáo dục và sản phẩm học tập.</p></div><div><h3>Tủ sách</h3><ul><li>Sách giáo khoa</li><li>Sách tham khảo</li><li>Sách thiếu nhi</li><li>Sách văn học</li></ul></div><div><h3>Hỗ trợ</h3><ul><li>Tài khoản</li><li>Giỏ hàng</li><li>Liên hệ</li></ul><</div></div></footer>
+
+<!-- Lớp nền mờ khi mở giỏ hàng -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- Khung giỏ hàng trượt bên phải -->
+<aside class="cart" id="cart">
+  <div class="cart-head">
+    <b>Giỏ hàng thanh toán</b>
+    <button type="button" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+      <b>Tổng cộng</b>
+      <b id="total">0 VNĐ</b>
+    </div>
+    <button class="checkout" type="button" onclick="openCheckoutModal()">💳 Tiến Hành Đặt Hàng & Thanh Toán</button>
+  </div>
+</aside>
+
+<!-- MODAL GIAO DIỆN THANH TOÁN -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="checkout-modal">
+    <div class="checkout-head">
+      <h3>📋 Thông Tin Đặt Hàng & Thanh Toán</h3>
+      <button type="button" onclick="closeCheckoutModal()">×</button>
+    </div>
+    <form id="checkoutForm" onsubmit="processCheckout(event)">
+      <div class="checkout-body">
+        <div class="order-summary-box">
+          <h4>📦 Tóm tắt đơn hàng</h4>
+          <div id="modalOrderSummary">Chưa có sản phẩm</div>
+          <div style="margin-top:8px;font-size:14px;font-weight:700;color:var(--red)">Tổng tiền: <span id="modalTotalAmount">0 VNĐ</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Họ và tên người nhận (*)</label>
+          <input type="text" id="custName" required placeholder="Nhập họ và tên...">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group">
+            <label>Số điện thoại (*)</label>
+            <input type="tel" id="custPhone" required placeholder="090xxxxxxx">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="custEmail" placeholder="example@gmail.com">
+          </div>
+        </div>
+
+        <fieldset class="form-group" style="margin:0;border:1px solid var(--line);border-radius:6px;padding:14px;background:#fff">
+          <legend style="padding:0 6px;font-weight:700;color:var(--green2)">Địa chỉ nhận hàng</legend>
+          <div class="form-group"><label for="custAddressLine">Số nhà, tên đường (*)</label><input id="custAddressLine" name="address-line1" autocomplete="address-line1" required placeholder="Ví dụ: 12 Nguyễn Trãi"></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px">
+            <div class="form-group"><label for="custWard">Phường / xã (*)</label><input id="custWard" name="address-level3" autocomplete="address-level3" required placeholder="Phường hoặc xã"></div>
+            <div class="form-group"><label for="custProvince">Tỉnh / thành phố (*)</label><input id="custProvince" name="address-level1" autocomplete="address-level1" required placeholder="Tỉnh hoặc thành phố"></div>
+          </div>
+          <div class="form-group" style="margin-top:10px"><label for="custPostalCode">Mã bưu chính (không bắt buộc)</label><input id="custPostalCode" name="postal-code" autocomplete="postal-code" inputmode="numeric" placeholder="Mã bưu chính"></div>
+        </fieldset>
+
+        <div class="form-group">
+          <label>Phương thức thanh toán (*)</label>
+          <select id="paymentMethod">
+            <option value="BANK_TRANSFER">Chuyển khoản Ngân hàng (QR Code)</option>
+            <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+            <option value="MOMO">Ví điện tử MoMo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="checkout-foot">
+        <button type="button" class="btn-cancel-order" onclick="closeCheckoutModal()">Hủy bỏ</button>
+        <button type="submit" class="btn-submit-order">🚀 Xác Nhận Đặt Hàng & Lưu CSDL</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  let products=[];
+
+  const cats=['Sách giáo khoa','Sách thiếu nhi','Sách tham khảo','Manga - Comic'];
+
+  const newsArticles=[
+    {title:'HƯỚNG DẪN THANH TOÁN HEBEC',date:'2025-09-10',dateLabel:'10/09/2025',category:'Hướng dẫn',group:'guide',cover:'news-art-payment',artTitle:'THANH TOÁN',summary:'Các lựa chọn COD, chuyển khoản, ví điện tử, thẻ ngân hàng và thanh toán trực tiếp; kèm lưu ý an toàn giao dịch.'},
+    {title:'HƯỚNG DẪN ĐẶT HÀNG HEBEC',date:'2025-09-10',dateLabel:'10/09/2025',category:'Hướng dẫn',group:'guide',cover:'news-art-order',artTitle:'ĐẶT HÀNG',summary:'Cách đặt hàng qua website, sàn thương mại điện tử, Fanpage/Zalo hoặc trực tiếp tại cửa hàng HEBEC.'},
+    {title:'CHÍNH SÁCH HOÀN TIỀN',date:'2025-09-10',dateLabel:'10/09/2025',category:'Chính sách',group:'policy',cover:'news-art-refund',artTitle:'HOÀN TIỀN',summary:'Các trường hợp được hoàn tiền, quy trình gửi yêu cầu và thời gian xử lý từ 3 đến 15 ngày làm việc.'},
+    {title:'TRUNG TÂM BẢO HÀNH HEBEC',date:'2025-09-10',dateLabel:'10/09/2025',category:'Chính sách',group:'policy',cover:'news-art-warranty',artTitle:'BẢO HÀNH',summary:'Thông tin tiếp nhận bảo hành, đổi trả và quy trình kiểm tra, xử lý các yêu cầu hỗ trợ sản phẩm.'},
+    {title:'CHÍNH SÁCH ĐỔI HÀNG',date:'2025-09-10',dateLabel:'10/09/2025',category:'Chính sách',group:'policy',cover:'news-art-exchange',artTitle:'ĐỔI HÀNG',summary:'Điều kiện đổi hàng trong 7 ngày, các trường hợp áp dụng và cách liên hệ HEBEC để gửi yêu cầu.'}
+  ];
+
+  const newsArticleContent=[
+    {intro:'HEBEC hỗ trợ nhiều phương thức thanh toán để khách hàng lựa chọn khi mua sách, dụng cụ học tập và dịch vụ giáo dục.',sections:[{id:'cod',title:'Thanh toán khi nhận hàng (COD)',paragraphs:['COD áp dụng cho đơn hàng trên website HEBEC và các kênh bán hàng chính thức. Khách hàng thanh toán trực tiếp cho nhân viên giao hàng khi nhận sản phẩm.']}]},
+    {intro:'Khách hàng có thể đặt sản phẩm HEBEC qua website, sàn thương mại điện tử, kênh hỗ trợ hoặc trực tiếp tại cửa hàng.',sections:[{id:'website',title:'Đặt hàng qua website HEBEC',bullets:['Truy cập hebecbooks.vn và tìm sản phẩm hoặc dịch vụ cần mua.','Chọn “Thêm vào giỏ hàng” hoặc “Mua ngay”.']}]},
+    {intro:'Chính sách hoàn tiền áp dụng cho sản phẩm và dịch vụ thuộc hệ sinh thái HEBEC khi đáp ứng điều kiện quy định.',sections:[{id:'eligible',title:'Trường hợp được hoàn tiền',bullets:['Sản phẩm hoặc dịch vụ không đúng mô tả.','Sản phẩm bị lỗi hoặc hư hỏng do nhà sản xuất hay quá trình vận chuyển.']}]},
+    {intro:'Trung tâm bảo hành tiếp nhận yêu cầu bảo hành, đổi trả, khiếu nại chất lượng và hỗ trợ sửa chữa các sản phẩm thuộc HEBEC.',sections:[{id:'services',title:'Dịch vụ hỗ trợ',bullets:['Tiếp nhận, kiểm tra và xử lý yêu cầu bảo hành, đổi trả.']}]},
+    {intro:'Khách hàng có thể yêu cầu đổi sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng nếu sản phẩm đáp ứng điều kiện.',sections:[{id:'conditions',title:'Điều kiện đổi hàng',bullets:['Sản phẩm còn nguyên tem mác, chưa qua sử dụng và còn đầy đủ phụ kiện, hóa đơn.']}]}
+  ];
+
+  let selected='Tất cả', page=1, cart=JSON.parse(localStorage.getItem('hebecCart')||'[]');
+  let selectedProduct=-1, categoryPage=0, categoryPageSize=5, categoryTransitioning=false;
+  let campaignIndex=0, campaignTimer=0, campaignPaused=false;
+
+  function money(n){return n.toLocaleString('vi-VN')+' VNĐ'}
+
+  function productImage(product){return product.imageUrl||'/Websie_banhang/assets/products/01.webp'}
+  async function loadStoreProducts(){
+    const grid=document.getElementById('productGrid');
+    try{
+      const response=await fetch('/api/v1/store/products',{cache:'no-store'});
+      const result=await response.json();
+      if(!response.ok||!result.success)throw new Error(result.error||'Không tải được sách từ CSDL.');
+      products=(result.data||[]).map(row=>{const item=[row.name,Number(row.selling_price),row.category_name,row.image_path];item.productId=Number(row.id);item.variantId=Number(row.variant_id);item.sku=row.sku;item.stock=Number(row.stock_quantity);item.imageUrl=row.image_path?'/Websie_banhang/assets/'+row.image_path:productImage(item);return item;});
+      if(localStorage.getItem('hebecCartDbIndexVersion')!=='1'){
+        cart=cart.map(oldIndex=>products.findIndex(item=>item.sku==='HEBEC-BOOK-'+String(Number(oldIndex)+1).padStart(2,'0'))).filter(index=>index>=0);
+        localStorage.setItem('hebecCartDbIndexVersion','1');
+      }else cart=cart.filter(index=>products[index]);
+      saveCart();initCats();renderCategoryPage();renderProducts();
+    }catch(error){grid.innerHTML=`<div class="empty">${error.message||'Không tải được danh sách sách từ CSDL.'}</div>`;}
+  }
+
+  /* HAM DIEU KHAN BANNER CAROUSEL */
+  function showCampaign(index){let slides=[...document.querySelectorAll('.campaign-slide')],dots=[...document.querySelectorAll('.campaign-dot')];if(!slides.length)return;campaignIndex=(index+slides.length)%slides.length;slides.forEach((slide,i)=>{let active=i===campaignIndex;slide.classList.toggle('active',active)});dots.forEach((dot,i)=>{let active=i===campaignIndex;dot.classList.toggle('active',active)})}
+  function buildBannerCarousel(files){let slides=document.getElementById('campaignSlides'),dots=document.getElementById('campaignDots');if(!slides||!dots)return;stopCampaignAutoplay();slides.innerHTML='';dots.innerHTML='';files.forEach((item,i)=>{let slide=document.createElement('a');slide.className='campaign-slide'+(i===0?' active':'');slide.href='#tu-sach';let img=document.createElement('img');img.src=item.url;slide.appendChild(img);slides.appendChild(slide);let dot=document.createElement('button');dot.className='campaign-dot'+(i===0?' active':'');dot.type='button';dot.onclick=()=>selectCampaign(i);dots.appendChild(dot)});campaignIndex=0;startCampaignAutoplay()}
+  async function loadBannerManifest(){try{let response=await fetch('/Websie_banhang/assets/banners/manifest.json',{cache:'no-store'});if(!response.ok)throw new Error();let data=await response.json();let files=(Array.isArray(data)?data:(data.banners||[])).map(name=>({name,url:'/Websie_banhang/assets/banners/'+encodeURIComponent(name)}));if(files.length){buildBannerCarousel(files);return}}catch(e){}}
+  function stopCampaignAutoplay(){if(campaignTimer){clearInterval(campaignTimer);campaignTimer=0}}
+  function startCampaignAutoplay(){stopCampaignAutoplay();if(!campaignPaused)campaignTimer=setInterval(()=>showCampaign(campaignIndex+1),5000)}
+  function changeCampaign(direction){showCampaign(campaignIndex+direction);startCampaignAutoplay()}
+  function selectCampaign(index){showCampaign(index);startCampaignAutoplay()}
+  function toggleCampaignAutoplay(){campaignPaused=!campaignPaused;document.getElementById('campaignPause').textContent=campaignPaused?'▶':'Ⅱ';startCampaignAutoplay()}
+  function initCampaignCarousel(){showCampaign(0);loadBannerManifest()}
+
+  /* DANH MỤC CÓ BIỂU TƯỢNG & PHÂN TRANG */
+  function initCats(){
+    const categoryIcons={'Combo ưu đãi':'<path d="M20.59 13.41 11 3.83H4v7l9.59 9.58a2 2 0 0 0 2.82 0l4.18-4.18a2 2 0 0 0 0-2.82Z"/><circle cx="7.5" cy="7.5" r=".5"/>','Sách giáo khoa':'<path d="M12 7v14"/><path d="M3 18V5a2 2 0 0 1 2-2h3a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3a2 2 0 0 1 2 2v13h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3Z"/>','Sách tham khảo':'<path d="M2 22h20M3 6l9-4 9 4v2H3zM4 10v9M9 10v9M15 10v9M20 10v9"/>','Sách thiếu nhi':'<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><path d="M17 13v8m-4-4h8"/>','Sách văn học':'<path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L3 12.5V21h8.5z"/><path d="m16 8-2 2M8 16l-1 1"/><path d="M7 17c-1 1-2 2-4 2"/>'};
+    document.getElementById('categoryRow').innerHTML=cats.map(c=>`<button type="button" class="category-item ${c===selected?'active':''}" onclick='filterCat(${JSON.stringify(c)})'><span class="category-icon-wrap"><svg class="category-icon" viewBox="0 0 24 24">${categoryIcons[c]||categoryIcons['Sách giáo khoa']}</svg></span><span class="category-label">${c}</span></button>`).join('')
+  }
+  function getCategoryPageSize(){return matchMedia('(max-width:620px)').matches?2:matchMedia('(max-width:991px)').matches?3:5}
+  function renderCategoryPage(){
+    let items=[...document.querySelectorAll('#categoryRow .category-item')];
+    categoryPageSize=getCategoryPageSize();
+    let pages=Math.max(1,Math.ceil(cats.length/categoryPageSize));
+    categoryPage=Math.min(Math.max(0,categoryPage),pages-1);
+    let start=categoryPage*categoryPageSize;
+    items.forEach((item,index)=>{item.hidden=index<start||index>=start+categoryPageSize});
+    document.getElementById('categoryPager').innerHTML=`<button class="category-pager-arrow" type="button" ${categoryPage===0?'disabled':''} onclick="changeCategoryPage(-1)">‹</button><div class="category-pager-dots">${Array.from({length:pages},(_,index)=>`<button class="category-pager-dot ${index===categoryPage?'active':''}" type="button" onclick="selectCategoryPage(${index})"></button>`).join('')}</div><button class="category-pager-arrow" type="button" ${categoryPage===pages-1?'disabled':''} onclick="changeCategoryPage(1)">›</button>`
+  }
+  function selectCategoryPage(index){categoryPage=index;renderCategoryPage()}
+  function changeCategoryPage(delta){categoryPage+=delta;renderCategoryPage()}
+  function filterCat(c){selected=(selected===c)?'Tất cả':c;document.getElementById('catalogHeading').textContent=selected;initCats();renderCategoryPage();renderProducts()}
+
+  /* SẢN PHẨM & GIỎ HÀNG */
+  function renderProducts(){
+    let q=document.getElementById('search').value.toLowerCase().trim();
+    let a=products.filter(p=>(selected==='Tất cả'||p[2]===selected)&&(!q||p[0].toLowerCase().includes(q)));
+    let sort=document.getElementById('sort').value;
+    if(sort==='low')a.sort((x,y)=>x[1]-y[1]);
+    if(sort==='high')a.sort((x,y)=>y[1]-x[1]);
+    if(sort==='name')a.sort((x,y)=>x[0].localeCompare(y[0],'vi'));
+    let per=8,pages=Math.max(1,Math.ceil(a.length/per));
+    page=Math.min(page,pages);
+    let items=a.slice((page-1)*per,page*per);
+    document.getElementById('productGrid').innerHTML=items.length?items.map((p)=>`<div class="col-xs-6 col-md-3"><div class="ibox"><div class="ibox-content product-box"><a class="pi-pic" href="#" onclick="openProduct(${products.indexOf(p)});return false"><img src="${productImage(p)}" alt="${p[0]}"></a><div class="product-desc"><span class="text-muted">${p[2]}</span><a class="product-name" title="${p[0]}" href="#" onclick="openProduct(${products.indexOf(p)});return false">${p[0]}</a><div class="book-price"><span class="price">${money(p[1])}</span><button class="buy" onclick="addCart(${products.indexOf(p)})">Thêm</button><</div></div><</div></div></div>`).join(''):'<div class="empty">Không tìm thấy sản phẩm phù hợp.</div>';
+    document.getElementById('pagination').innerHTML=Array.from({length:pages},(_,i)=>`<button class="${i+1===page?'active':''}" onclick="page=${i+1};renderProducts()">${i+1}</button>`).join('')
+  }
+
+  function addCart(i,quantity=1){let amount=Math.max(1,parseInt(quantity,10)||1);for(let n=0;n<amount;n++)cart.push(i);saveCart();openCart()}
+  function saveCart(){localStorage.setItem('hebecCart',JSON.stringify(cart));renderCart()}
+  function changeQty(i,d){if(d>0)cart.push(i);else{let k=cart.indexOf(i);if(k>=0)cart.splice(k,1)}saveCart()}
+  function removeCart(i){cart=cart.filter(x=>x!==i);saveCart()}
+
+  function renderCart(){
+    let cartBodyEl = document.getElementById('cartBody');
+    let totalEl = document.getElementById('total');
+    let badgeEl = document.getElementById('badge');
+
+    if (!cartBodyEl) return;
+    if (!products.length) { cartBodyEl.innerHTML='<div style="padding:30px;text-align:center;color:#888">Đang tải sách...</div>'; if (badgeEl) badgeEl.textContent=cart.length; return; }
+
+    let counts = {};
+    cart.forEach(i => counts[i] = (counts[i] || 0) + 1);
+    let total = 0;
+
+    cartBodyEl.innerHTML = Object.entries(counts).map(([i, q]) => {
+      let p = products[i], sum = p[1] * q;
+      total += sum;
+      return `<div class="cart-item"><img src="${productImage(p)}"><div><b>${p[0]}</b><div style="color:var(--red);margin-top:4px">${money(p[1])}</div><div class="qty"><button onclick="changeQty(${i},-1)">−</button>${q}<button onclick="changeQty(${i},1)">+</button><</div></div><button style="border:0;background:none;color:#999;cursor:pointer" onclick="removeCart(${i})">×</button></div>`;
+    }).join('') || '<div style="padding:30px;text-align:center;color:#888">Giỏ hàng trống.</div>';
+
+    if (totalEl) totalEl.textContent = money(total);
+    if (badgeEl) badgeEl.textContent = cart.length;
+  }
+
+  function openCart() {
+    let cartEl = document.getElementById('cart');
+    let overlayEl = document.getElementById('overlay');
+    if (cartEl) cartEl.classList.add('open');
+    if (overlayEl) overlayEl.classList.add('open');
+    renderCart();
+  }
+
+  function closeCart() {
+    let cartEl = document.getElementById('cart');
+    let overlayEl = document.getElementById('overlay');
+    if (cartEl) cartEl.classList.remove('open');
+    if (overlayEl) overlayEl.classList.remove('open');
+  }
+
+  /* CHI TIẾT SẢN PHẨM & BÀI VIẾT TIN TỨC */
+  function renderProductPage(index){
+    let p=products[index];if(!p)return;selectedProduct=index;
+    document.getElementById('storeView').hidden=true;
+    let detail=document.getElementById('productDetailView');detail.hidden=false;
+    detail.innerHTML=`<button class="detail-back" type="button" onclick="closeProduct()">← Quay lại tủ sách</button><div class="detail-crumb"><a href="#tu-sach" onclick="closeProduct();return false">Tủ sách</a><span>/</span><span>${p[0]}</span></div><div class="detail-layout"><div class="detail-media"><img src="${productImage(p)}" alt="${p[0]}"></div><div class="detail-info"><span class="detail-category">${p[2]}</span><h1>${p[0]}</h1><div class="detail-price">${money(p[1])}</div><div class="detail-description"><strong>Thông tin sản phẩm</strong><p>Sách chính hãng thuộc danh mục ${p[2]} tại HEBEC Books.</p></div><div class="detail-purchase"><div class="detail-quantity"><button type="button" onclick="adjustDetailQty(-1)">−</button><input id="detailQty" type="number" min="1" value="1"><button type="button" onclick="adjustDetailQty(1)">+</button></div><button class="detail-add" type="button" onclick="addDetailToCart()">Thêm vào giỏ hàng</button><</div></div></div>`;
+    window.scrollTo({top:0,behavior:'smooth'})
+  }
+  function adjustDetailQty(d){let input=document.getElementById('detailQty');if(input)input.value=Math.max(1,(parseInt(input.value,10)||1)+d)}
+  function addDetailToCart(){let input=document.getElementById('detailQty');if(selectedProduct>=0&&input)addCart(selectedProduct,input.value)}
+  function openProduct(index){history.pushState({productIndex:index},'',`#san-pham/${index}`);renderProductPage(index)}
+  function closeProduct(){history.replaceState(null,'','#tu-sach');document.getElementById('storeView').hidden=false;document.getElementById('productDetailView').hidden=true}
+
+  function renderNews(group='all'){
+    let articles=group==='all'?newsArticles:newsArticles.filter(a=>a.group===group);
+    document.getElementById('newsGrid').innerHTML=articles.map(article=>{
+      let index=newsArticles.indexOf(article);
+      return `<article class="news-card"><a class="news-card-link" href="#tin-tuc/${index}" onclick="openNewsArticle(${index});return false"><div class="news-art ${article.cover}"><span class="news-art-kicker">HEBEC BOOKS / ${article.category}</span><strong class="news-art-title">${article.artTitle}</strong><span class="news-art-index">0${index+1}</span></div><div class="news-card-body"><div class="news-meta"><span class="news-tag">${article.category}</span><time>${article.dateLabel}</time></div><h3>${article.title}</h3><p class="news-summary">${article.summary}</p><span class="news-read">Đọc bài viết &rarr;</span></div></a></article>`
+    }).join('')
+  }
+  function openNewsArticle(index){
+    let article=newsArticles[index],content=newsArticleContent[index];if(!article||!content)return;
+    document.getElementById('storeView').hidden=true;
+    let detail=document.getElementById('newsDetailView');detail.hidden=false;
+    detail.innerHTML=`<button class="news-detail-back" type="button" onclick="closeNewsArticle()">← Quay lại tin tức</button><div class="news-detail-header"><span class="news-tag">${article.category}</span><h1>${article.title}</h1></div><p class="news-detail-lead">${content.intro}</p>`;
+    window.scrollTo({top:0,behavior:'smooth'})
+  }
+  function closeNewsArticle(){document.getElementById('storeView').hidden=false;document.getElementById('newsDetailView').hidden=true}
+  function selectNewsTab(group,btn){document.querySelectorAll('.news-tab').forEach(t=>t.setAttribute('aria-selected',t===btn?'true':'false'));renderNews(group)}
+
+  /* MODAL GIAO DIỆN THANH TOÁN (CHECKOUT MODAL) */
+  function openCheckoutModal(){
+    if(cart.length===0)return alert('Giỏ hàng của bạn đang trống!');
+    let counts={};cart.forEach(i=>counts[i]=(counts[i]||0)+1);
+    let total=0;
+    let summaryHtml=Object.entries(counts).map(([i,q])=>{
+      let p=products[i],sum=p[1]*q;total+=sum;
+      return `<div>• <b>${p[0]}</b> (SL: ${q}) - ${money(sum)}</div>`;
+    }).join('');
+    document.getElementById('modalOrderSummary').innerHTML=summaryHtml;
+    document.getElementById('modalTotalAmount').textContent=money(total);
+    closeCart();
+    document.getElementById('checkoutModal').classList.add('open');
+  }
+  function closeCheckoutModal(){document.getElementById('checkoutModal').classList.remove('open')}
+
+  async function processCheckout(e){
+    e.preventDefault();
+    if(cart.length===0)return alert('Giỏ hàng đang trống!');
+    const name=document.getElementById('custName').value.trim();
+    const phone=document.getElementById('custPhone').value.trim();
+    const email=document.getElementById('custEmail').value.trim();
+    const address_line=document.getElementById('custAddressLine').value.trim();
+    const ward=document.getElementById('custWard').value.trim();
+    const province=document.getElementById('custProvince').value.trim();
+    const postal_code=document.getElementById('custPostalCode').value.trim();
+    const method=document.getElementById('paymentMethod').value;
+
+    let counts={};cart.forEach(i=>counts[i]=(counts[i]||0)+1);
+    const orderItems=Object.entries(counts).map(([idx,qty])=>({
+      variant_id:products[idx].variantId,
+      product_name:products[idx][0],
+      sku:products[idx].sku,
+      quantity:qty
+    }));
+
+    const orderPayload={
+      items:orderItems,
+      customer_info:{full_name:name,phone:phone,email:email,address_line,ward,province,postal_code},
+      payment_method:method
+    };
+
+    try{
+      const res=await fetch('/api/v1/store/checkout',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-user-id':'1','x-user-role':'GUEST'},
+        body:JSON.stringify(orderPayload)
+      });
+      const data=await res.json();
+      if(!res.ok) throw new Error(data.error||data.message||'Không thể tạo đơn hàng.');
+      if(data.success){
+        alert('🎉 ĐẶT HÀNG THÀNH CÔNG!\n- Mã đơn hàng: '+(data.data?.order_code||data.order_code)+'\n- Đã lưu vào CSDL MySQL Workbench!');
+        cart=[];saveCart();closeCheckoutModal();
+      }else{
+        alert('Lỗi đặt hàng: '+(data.error||data.message||'Vui lòng thử lại.'));
+      }
+    }catch(err){
+      alert(err.message||'Không thể kết nối API Checkout.');
+    }
+  }
+
+  /* KHỞI TẠO TRANG */
+  initCampaignCarousel();
+  initCats();
+  renderCategoryPage();
+  loadStoreProducts();
+  renderCart();
+  renderNews();
+</script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEBEC Books - Quản trị cửa hàng</title>
+  <style>
+    :root{--green:#176b52;--green2:#0d4637;--green3:#eaf5f0;--gold:#e5a92b;--bg:#f4f7f6;--card:#fff;--text:#17221d;--muted:#718078;--line:#e1e8e4;--red:#c94747;--shadow:0 8px 30px rgba(22,45,35,.07)}
+    *{box-sizing:border-box}body{margin:0;min-height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.sidebar{background:var(--green2);color:#fff;position:fixed;left:0;top:0;bottom:0;width:260px;overflow:auto}.brand{padding:23px 22px;border-bottom:1px solid #ffffff16}.brand b{font-size:22px}.brand span{color:var(--gold)}.brand img{display:block;max-width:170px;max-height:52px;object-fit:contain;background:transparent;border-radius:0;padding:0;margin-bottom:12px}.adminUser{margin:16px;background:#ffffff0d;border-radius:12px;padding:13px}.navGroup{padding:8px 12px}.navItem{width:100%;border:0;background:transparent;color:#d6e8e1;text-align:left;padding:11px 12px;border-radius:99px;margin:2px 0;display:flex;gap:11px;align-items:center}.navItem.active,.navItem:hover{background:#1b5d4a;color:#fff}.main{grid-column:2}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px}.content{padding:28px}.screen{display:none}.screen.active{display:block}.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700}.btn.primary{background:var(--green);color:#fff}.btn.secondary{background:#edf4f1;color:var(--green2)}.btn.danger{background:#fff0f0;color:var(--red)}.tableWrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px 13px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.input{border:1px solid var(--line);border-radius:8px;padding:9px 11px;outline:0;background:#fff;width:100%}.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+
+<div id="adminApp" class="app">
+  <aside class="sidebar">
+    <div class="brand"><img src="/Websie_banhang/assets/brand/logo.png" alt="HEBEC Books"><b>ADMIN</b></div>
+    <div class="adminUser"><strong id="storeAdminIdentity">Chưa đăng nhập</strong><button id="storeAdminLogout" class="btn secondary hidden" type="button" style="width:100%;margin-top:10px" onclick="logoutStoreAdmin()">Đăng xuất</button></div>
+    <div class="navGroup">
+      <button class="navItem active" onclick="go('products')">▣ Sản phẩm & Kho MySQL</button>
+    </div>
+    <div class="navGroup">
+      <button class="navItem" onclick="go('orders')">&#128722; &#272;&#417;n h&#224;ng &amp; Thanh to&#225;n</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><span>Admin / <b>Quản Lý Sản Phẩm & Kho Hàng CSDL</b></span></header>
+    <div class="content">
+
+      <section id="products" class="screen active">
+        <div style="display:flex;justify-content:space-between;margin-bottom:20px">
+          <h1>Quản lý Sản phẩm MySQL</h1>
+          <button class="btn primary" onclick="openCreateProductModal()">＋ Thêm Sản Phẩm Mới</button>
+        </div>
+
+        <div id="productCreateBox" class="card hidden" style="background:#fff;padding:20px;border-radius:12px;margin-bottom:20px;border:1px solid var(--line)">
+          <h3>Thêm sản phẩm trực tiếp vào CSDL MySQL</h3>
+          <div class="formGrid">
+            <div><label>Tên sản phẩm:</label><input class="input" id="newPName" placeholder="Tên sản phẩm..."></div>
+            <div><label>Giá bán (VNĐ):</label><input class="input" type="number" id="newPPrice" placeholder="VD: 50000"></div>
+            <div><label>Số lượng kho:</label><input class="input" type="number" id="newPStock" placeholder="VD: 100"></div>
+            <div><label>Mã SKU:</label><input class="input" id="newPSku" placeholder="VD: SKU-SP01"></div>
+            <div><label>Danh m&#7909;c:</label><select class="input" id="newPCategory"><option>S&#225;ch gi&#225;o khoa</option><option>S&#225;ch thi&#7871;u nhi</option><option>S&#225;ch tham kh&#7843;o</option><option>Manga - Comic</option></select></div>
+            <div><label>Ảnh bìa:</label><select class="input" id="newPImage"><option value="">Dùng ảnh mặc định</option></select><div style="display:flex;gap:8px;margin-top:8px"><input class="input" type="file" id="newPCoverFile" accept="image/jpeg,image/png,image/webp"><button class="btn secondary" type="button" onclick="uploadProductCover('new')">Tải ảnh lên</button></div><small id="newPCoverMessage" role="status"></small></div>
+          </div>
+          <div style="margin-top:15px">
+            <button class="btn primary" onclick="saveNewProductToDb()">Lưu Sản Phẩm Vào CSDL</button>
+            <button class="btn secondary" onclick="document.getElementById('productCreateBox').classList.add('hidden')">Hủy</button>
+          </div>
+        </div>
+
+        <div id="productEditBox" class="card hidden" style="background:#fff;padding:20px;border-radius:12px;margin-bottom:20px;border:1px solid var(--line)">
+          <h3 id="productEditTitle">Sửa sản phẩm</h3>
+          <input type="hidden" id="editProductId">
+          <div class="formGrid">
+            <div><label>Tên sản phẩm:</label><input class="input" id="editPName" required></div>
+            <div><label>Giá bán (VNĐ):</label><input class="input" type="number" min="1" step="1" id="editPPrice" required></div>
+            <div><label>Số lượng kho:</label><input class="input" type="number" min="0" step="1" id="editPStock" required></div>
+            <div><label>Mã SKU:</label><input class="input" id="editPSku" required></div>
+            <div><label>Danh mục:</label><input class="input" id="editPCategory" required></div>
+            <div><label>Ảnh bìa:</label><select class="input" id="editPImage"></select><div style="display:flex;gap:8px;margin-top:8px"><input class="input" type="file" id="editPCoverFile" accept="image/jpeg,image/png,image/webp"><button class="btn secondary" type="button" onclick="uploadProductCover('edit')">Tải ảnh lên</button></div><small id="editPCoverMessage" role="status"></small></div>
+          </div>
+          <p id="editProductMessage" role="status"></p>
+          <div style="margin-top:15px;display:flex;gap:8px">
+            <button class="btn primary" type="button" onclick="saveProductEdit()">Lưu thay đổi</button>
+            <button class="btn secondary" type="button" onclick="closeProductEdit()">Hủy</button>
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table class="table">
+            <thead>
+            <tr><th>ID</th><th>&#7842;nh</th><th>M&#227; SKU</th><th>T&#234;n S&#7843;n Ph&#7849;m</th><th>Danh m&#7909;c</th><th>Gi&#225; B&#225;n</th><th>T&#7891;n Kho</th><th>Thao T&#225;c</th></tr>
+            </thead>
+            <tbody id="adminProductRows">
+            <tr><td colspan="8" style="text-align:center">Đang tải danh sách kho từ CSDL...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="orders" class="screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px"><h1>Quản lý đơn hàng & thanh toán</h1><button class="btn secondary" type="button" onclick="fetchOrdersFromDb()">Tải lại</button></div>
+        <div id="orderAdminLogin" class="card" style="max-width:480px;background:#fff;padding:20px;border-radius:12px;margin-bottom:20px;border:1px solid var(--line)">
+          <p>Đăng nhập bằng tài khoản quản trị để xem thông tin liên hệ và địa chỉ khách hàng.</p>
+          <small>Tài khoản quản trị được xác thực bằng .env, không cần thêm dòng thủ công vào bảng users: đặt AUTH_COMPANY_ADMIN_EMAIL / AUTH_COMPANY_ADMIN_PASSWORD hoặc AUTH_SUPER_ADMIN_EMAIL / AUTH_SUPER_ADMIN_PASSWORD rồi khởi động lại app.js.</small>
+          <form onsubmit="loginStoreAdmin(event)" style="display:grid;gap:12px">
+            <label>Vai trò<select id="storeAdminRole" class="input"><option value="COMPANY_ADMIN">Quản trị cửa hàng</option><option value="SUPER_ADMIN">Quản trị hệ thống</option></select></label>
+            <label>Email<input id="storeAdminEmail" class="input" type="email" autocomplete="username" required></label>
+            <label>Mật khẩu<input id="storeAdminPassword" class="input" type="password" autocomplete="current-password" required></label>
+            <label style="display:flex;gap:8px;align-items:center"><input id="rememberStoreAdmin" type="checkbox" checked style="width:auto"> Ghi nhớ email và vai trò trên thiết bị này</label>
+            <button class="btn primary" type="submit">Đăng nhập</button><p id="storeAdminLoginMessage" role="status"></p>
+          </form>
+        </div>
+        <div id="ordersWorkspace" class="tableWrap hidden"><table class="table"><thead><tr><th>Mã đơn</th><th>Người nhận / Địa chỉ</th><th>Sản phẩm</th><th>Tổng tiền</th><th>Trạng thái đơn / giao</th><th>Thanh toán</th><th>Lưu</th></tr></thead><tbody id="adminOrderRows"></tbody></table></div>
+      </section>    </div></main></div>
+
+<script>
+  function go(id){ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='orders')fetchOrdersFromDb(); }
+  function openCreateProductModal(){ document.getElementById('productCreateBox').classList.remove('hidden'); }
+  const adminProductsById=new Map();
+  function productImageOptions(selected=''){
+    const files=Array.from({length:16},(_,index)=>String(index+1).padStart(2,'0')+'.webp');
+    return '<option value="">Dùng ảnh mặc định</option>'+files.map(file=>`<option value="${file}" ${selected===file?'selected':''}>${file}</option>`).join('');
+  }
+  async function uploadProductCover(mode){
+    const prefix=mode==='edit'?'edit':'new';
+    const fileInput=document.getElementById(prefix+'PCoverFile');
+    const message=document.getElementById(prefix+'PCoverMessage');
+    const file=fileInput.files[0];
+    if(!file){message.textContent='Chọn ảnh từ thiết bị trước.';return;}
+    if(file.size>5*1024*1024){message.textContent='Ảnh tối đa 5 MB.';return;}
+    try{
+      const result=await readAdminJson(await fetch('/api/v1/store/product-covers',{method:'POST',headers:{'Content-Type':file.type},body:file}));
+      const select=document.getElementById(mode==='edit'?'editPImage':'newPImage');
+      let option=Array.from(select.options).find(item=>item.value===result.data.image_name);
+      if(!option){option=new Option(`Ảnh đã tải lên · ${file.name}`,result.data.image_name);select.add(option);}
+      select.value=result.data.image_name;
+      message.textContent='Đã tải ảnh lên. Ảnh sẽ được gán khi lưu sản phẩm.';
+      fileInput.value='';
+    }catch(error){message.textContent=error.message||'Không tải được ảnh.';}
+  }
+
+  // 1. Tải danh sách sản phẩm từ CSDL khi mở trang
+  async function fetchProductsFromDb() {
+    try {
+      const res = await fetch('/api/v1/store/products');
+      const data = await res.json();
+      if(data.success && data.data.length > 0) {
+        document.getElementById('newPImage').innerHTML=productImageOptions();
+        document.getElementById('editPImage').innerHTML=productImageOptions();
+        data.data.forEach(product=>adminProductsById.set(Number(product.id),product));
+        document.getElementById('adminProductRows').innerHTML = data.data.map(p => `
+        <tr>
+          <td>#${p.id}</td>
+          <td><img src="/Websie_banhang/assets/${p.image_path || 'products/01.webp'}" alt="" style="width:42px;height:56px;object-fit:contain;background:#f4f7f6;border-radius:4px"></td>
+          <td><code>${p.sku || 'SKU-'+p.id}</code></td>
+          <td><b>${p.name}</b></td>
+          <td>${p.category_name || '—'}</td>
+          <td><b>${(p.selling_price || 0).toLocaleString()}đ</b></td>
+          <td><b style="color:${p.stock_quantity > 0 ? 'green':'red'}">${p.stock_quantity}</b></td>
+          <td>
+            <button class="btn secondary" onclick="openProductEdit(${Number(p.id)})">Sửa sản phẩm</button>
+            <button class="btn secondary" onclick="updateDbStock(${p.id})">Sửa Kho</button>
+            <button class="btn danger" onclick="deleteDbProduct(${p.id})">Xóa</button>
+          </td>
+        </tr>
+      `).join('');
+      } else {
+        document.getElementById('adminProductRows').innerHTML = `<tr><td colspan="8">Chưa có dữ liệu trong MySQL. Hãy nạp dữ liệu mẫu tại <b>/api/v1/seed-data</b></td></tr>`;
+      }
+    } catch(e) {
+      document.getElementById('adminProductRows').innerHTML = `<tr><td colspan="8" style="color:red">Không kết nối được server Express. Vui lòng bật backend node app.js.</td></tr>`;
+    }
+  }
+
+  function openProductEdit(id){
+    const product=adminProductsById.get(Number(id));
+    if(!product)return alert('Không tìm thấy thông tin sản phẩm. Hãy tải lại danh sách.');
+    document.getElementById('editProductId').value=product.id;
+    document.getElementById('editPName').value=product.name||'';
+    document.getElementById('editPPrice').value=product.selling_price??'';
+    document.getElementById('editPStock').value=product.stock_quantity??0;
+    document.getElementById('editPSku').value=product.sku||'';
+    document.getElementById('editPCategory').value=product.category_name||'';
+    const imageName=String(product.image_path||'').split('/').pop();
+    const imageSelect=document.getElementById('editPImage');
+    imageSelect.innerHTML=productImageOptions();
+    if(imageName&&!Array.from(imageSelect.options).some(option=>option.value===imageName))imageSelect.add(new Option(imageName,imageName));
+    imageSelect.value=imageName;
+    document.getElementById('editProductMessage').textContent='';
+    document.getElementById('productCreateBox').classList.add('hidden');
+    document.getElementById('productEditBox').classList.remove('hidden');
+    document.getElementById('productEditBox').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function closeProductEdit(){document.getElementById('productEditBox').classList.add('hidden');}
+  async function saveProductEdit(){
+    const id=Number(document.getElementById('editProductId').value);
+    const body={name:document.getElementById('editPName').value.trim(),price:Number(document.getElementById('editPPrice').value),stock:Number(document.getElementById('editPStock').value),sku:document.getElementById('editPSku').value.trim(),category_name:document.getElementById('editPCategory').value.trim(),image_name:document.getElementById('editPImage').value};
+    const message=document.getElementById('editProductMessage');
+    if(!body.name||!body.sku||!body.category_name||!Number.isFinite(body.price)||body.price<=0||!Number.isInteger(body.stock)||body.stock<0){message.textContent='Vui lòng nhập tên, SKU, danh mục hợp lệ, giá lớn hơn 0 và tồn kho không âm.';return;}
+    try{
+      const response=await fetch(`/api/v1/store/products/${id}`,{method:'PUT',headers:{'Content-Type':'application/json','x-user-role':'ADMIN'},body:JSON.stringify(body)});
+      const result=await response.json();
+      if(!response.ok||!result.success)throw new Error(result.error||result.message||'Không cập nhật được sản phẩm.');
+      message.textContent='Đã cập nhật sản phẩm.';
+      await fetchProductsFromDb();
+      closeProductEdit();
+    }catch(error){message.textContent=error.message||'Lỗi cập nhật sản phẩm.';}
+  }
+
+  // 2. Thêm mới sản phẩm vào MySQL
+  async function saveNewProductToDb() {
+    const name = document.getElementById('newPName').value;
+    const price = parseFloat(document.getElementById('newPPrice').value) || 0;
+    const stock = parseInt(document.getElementById('newPStock').value) || 0;
+    const sku = document.getElementById('newPSku').value;
+    const category_name = document.getElementById('newPCategory').value;
+    const image_name = document.getElementById('newPImage').value;
+
+    if(!name) return alert('Vui lòng nhập tên sản phẩm!');
+
+    try {
+      const res = await fetch('/api/v1/store/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-role': 'ADMIN' },
+        body: JSON.stringify({ name, price, stock, sku, category_name, image_name })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || data.message || 'Không thêm được sản phẩm.');
+      if(data.success) {
+        alert('🎉 Đã thêm sản phẩm thành công vào MySQL!');
+        document.getElementById('productCreateBox').classList.add('hidden');
+        fetchProductsFromDb();
+      }
+    } catch(e) { alert(e.message || 'Lỗi khi lưu sách vào CSDL!'); }
+  }
+
+  // 3. Cập nhật tồn kho
+  async function updateDbStock(id) {
+    const newStock = prompt('Nhập số lượng tồn kho mới trong CSDL:');
+    if(newStock === null) return;
+
+    try {
+      const res = await fetch(`/api/v1/store/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-user-role': 'ADMIN' },
+        body: JSON.stringify({ stock: parseInt(newStock) })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || data.message || 'Không cập nhật được kho.');
+      if(data.success) { alert('Đã cập nhật kho!'); fetchProductsFromDb(); }
+    } catch(e) { alert('Lỗi cập nhật kho!'); }
+  }
+
+  // 4. Xóa sản phẩm khỏi CSDL MySQL
+  async function deleteDbProduct(id) {
+    if(!confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi MySQL?')) return;
+    try {
+      const res = await fetch(`/api/v1/store/products/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-user-role': 'ADMIN' }
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || data.message || 'Không xóa được sản phẩm.');
+      if(data.success) { alert('Đã xóa thành công!'); fetchProductsFromDb(); }
+    } catch(e) { alert('Lỗi xóa sản phẩm!'); }
+  }
+
+  const orderStatusOptions=[['PENDING_PAYMENT','Chờ thanh toán'],['PENDING_CONFIRM','Chờ xác nhận'],['CONFIRMED','Đã xác nhận'],['PACKING','Đang đóng gói'],['SHIPPING','Đang giao'],['DELIVERED','Đã giao'],['COMPLETED','Hoàn tất'],['CANCELLED','Đã hủy']];
+  const paymentStatusOptions=[['UNPAID','Chưa thanh toán'],['PAID','Đã thanh toán'],['PARTIALLY_REFUNDED','Hoàn một phần'],['REFUNDED','Đã hoàn tiền']];
+  const shippingStatusOptions=[['UNSHIPPED','Chưa gửi'],['SHIPPED','Đã gửi'],['DELIVERED','Đã giao'],['FAILED','Giao thất bại']];
+  const escapeOrderText=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const orderSelect=(id,options,value)=>`<select id="${id}" class="input">${options.map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${label}</option>`).join('')}</select>`;
+  function setStoreAdminIdentity(data){
+    const roleName=data.role==='SUPER_ADMIN'?'Quản trị hệ thống':'Quản trị cửa hàng';
+    document.getElementById('storeAdminIdentity').textContent=`${data.full_name||roleName} · ${roleName}`;
+    document.getElementById('storeAdminLogout').classList.remove('hidden');
+  }
+  async function restoreStoreAdminSession(){
+    try{const result=await readAdminJson(await fetch('/api/v1/auth/session',{cache:'no-store'}));setStoreAdminIdentity(result.data);}
+    catch{document.getElementById('storeAdminIdentity').textContent='Chưa đăng nhập';document.getElementById('storeAdminLogout').classList.add('hidden');}
+  }
+  function restoreStoreAdminLoginHint(){
+    try{const saved=JSON.parse(localStorage.getItem('storeAdminLoginHint')||'null');if(saved?.email&&['COMPANY_ADMIN','SUPER_ADMIN'].includes(saved.role)){document.getElementById('storeAdminEmail').value=saved.email;document.getElementById('storeAdminRole').value=saved.role;}}
+    catch{localStorage.removeItem('storeAdminLoginHint');}
+  }
+  async function loginStoreAdmin(event){
+    event.preventDefault();const message=document.getElementById('storeAdminLoginMessage');
+    try{const role=document.getElementById('storeAdminRole').value;const email=document.getElementById('storeAdminEmail').value.trim();const result=await readAdminJson(await fetch('/api/v1/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role,email,password:document.getElementById('storeAdminPassword').value})}));setStoreAdminIdentity(result.data);if(document.getElementById('rememberStoreAdmin').checked)localStorage.setItem('storeAdminLoginHint',JSON.stringify({email,role}));else localStorage.removeItem('storeAdminLoginHint');message.textContent='Đăng nhập thành công. Phiên được giữ bằng cookie bảo mật.';document.getElementById('storeAdminPassword').value='';await fetchOrdersFromDb();}
+    catch(error){message.textContent=error.message||'Không thể đăng nhập.';}
+  }
+  async function readAdminJson(response){
+    const contentType=response.headers.get('content-type')||'';
+    const body=await response.text();
+    let result;
+    if(!contentType.toLowerCase().includes('application/json')){
+      const detail=body.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,180);
+      if(response.status===404)throw new Error('Không tìm thấy API đăng nhập/đơn hàng (HTTP 404). Hãy mở trang qua app.js và kiểm tra đường dẫn API.');
+      throw new Error(`Máy chủ trả HTML thay vì JSON (HTTP ${response.status}).${detail?` Phản hồi: ${detail}`:''}`);
+    }
+    try{result=JSON.parse(body);}catch{throw new Error(`Máy chủ trả JSON không hợp lệ (HTTP ${response.status}).`);}
+    if(!response.ok||!result.success){
+      const error=result.error||result.message||'Yêu cầu không thành công.';
+      if(/not configured for login in \.env/i.test(error))throw new Error('Vai trò chưa được cấu hình đăng nhập. Hãy thêm email và mật khẩu tương ứng AUTH_COMPANY_ADMIN_* hoặc AUTH_SUPER_ADMIN_* vào .env rồi khởi động lại app.js.');
+      throw new Error(error);
+    }
+    return result;
+  }
+  async function fetchOrdersFromDb(){
+    try{
+      const result=await readAdminJson(await fetch('/api/v1/store/orders',{cache:'no-store'}));
+      document.getElementById('orderAdminLogin').classList.add('hidden');document.getElementById('ordersWorkspace').classList.remove('hidden');
+      document.getElementById('adminOrderRows').innerHTML=result.data.length?result.data.map(order=>{
+        const address=order.shipping_address_snapshot||{};
+        const addressText=[address.address_line,address.ward,address.district,address.province,address.postal_code].filter(Boolean).map(escapeOrderText).join(', ');
+        const lines=(order.items||[]).map(item=>`${escapeOrderText(item.product_name_snapshot)} × ${Number(item.quantity)} · ${Number(item.price_snapshot).toLocaleString('vi-VN')}₫`).join('<br>')||'Không có chi tiết sản phẩm';
+        return `<tr><td><strong>${escapeOrderText(order.order_code)}</strong><br><small>${new Date(order.created_at).toLocaleString('vi-VN')}</small></td><td>${escapeOrderText(order.guest_name)}<br>${escapeOrderText(order.guest_phone)}<br>${escapeOrderText(order.guest_email||'')}<br><small>${addressText}</small></td><td>${lines}</td><td><strong>${Number(order.total_amount).toLocaleString('vi-VN')}₫</strong></td><td>${orderSelect('order-status-'+order.id,orderStatusOptions,order.status)}<div style="height:6px"></div>${orderSelect('shipping-status-'+order.id,shippingStatusOptions,order.shipping_status)}</td><td><small>${escapeOrderText(({COD:'COD',BANK_TRANSFER:'Chuyển khoản',ONLINE_GATEWAY:'Cổng điện tử'})[order.payment_method]||'')}</small><br>${orderSelect('payment-status-'+order.id,paymentStatusOptions,order.payment_status)}<input id="payment-code-${order.id}" class="input" style="margin-top:6px" value="${escapeOrderText(order.transaction_code||'')}" placeholder="Mã giao dịch"></td><td><button class="btn primary" onclick="saveOrderStatus(${Number(order.id)})">Lưu</button><p id="order-message-${order.id}" role="status"></p></td></tr>`;
+      }).join(''):'<tr><td colspan="7" style="text-align:center;padding:24px">Chưa có đơn hàng.</td></tr>';
+    }catch(error){
+      document.getElementById('ordersWorkspace').classList.add('hidden');document.getElementById('orderAdminLogin').classList.remove('hidden');
+      document.getElementById('storeAdminLoginMessage').textContent=error.message||'Đăng nhập quản trị để xem đơn hàng.';
+    }
+  }
+  async function saveOrderStatus(id){
+    const message=document.getElementById('order-message-'+id);
+    try{
+      const body={status:document.getElementById('order-status-'+id).value,shipping_status:document.getElementById('shipping-status-'+id).value,payment_status:document.getElementById('payment-status-'+id).value,transaction_code:document.getElementById('payment-code-'+id).value.trim()};
+      const result=await readAdminJson(await fetch('/api/v1/store/orders/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}));message.textContent=result.message||'Đã lưu.';await fetchOrdersFromDb();
+    }catch(error){message.textContent=error.message||'Không cập nhật được đơn hàng.';}
+  }
+  async function logoutStoreAdmin(){try{await readAdminJson(await fetch('/api/v1/auth/logout',{method:'POST'}));localStorage.removeItem('storeAdminLoginHint');document.getElementById('storeAdminIdentity').textContent='Chưa đăng nhập';document.getElementById('storeAdminLogout').classList.add('hidden');await fetchOrdersFromDb();}catch(error){alert(error.message);}}
+  window.onload = function() { restoreStoreAdminLoginHint(); fetchProductsFromDb(); restoreStoreAdminSession(); };
+</script>
+</body>
+</html>

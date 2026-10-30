@@ -1,0 +1,19 @@
+name: hebec_books
+description: HEBEC Books mobile app converted from the supplied HTML prototype.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/brand/
+    - assets/products/
+    - assets/banners/
+    - assets/fonts/

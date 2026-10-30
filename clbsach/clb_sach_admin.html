@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Quản Trị - Sách Học Đường</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;color:#1e293b}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:#0f172a;color:#fff;padding:20px 15px;overflow-y:auto;z-index:10}
+    .brand{font-size:17px;font-weight:800;padding-bottom:15px;border-bottom:1px solid #334155;margin-bottom:15px;color:#38bdf8}
+    .brand small{display:block;font-size:11px;color:#94a3b8;margin-top:4px;font-weight:normal}
+    .side-nav a{display:flex;align-items:center;gap:10px;padding:12px;border-radius:8px;color:#cbd5e1;margin:4px 0;text-decoration:none;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+    .side-nav a.active,.side-nav a:hover{background:#0284c7;color:#fff}
+    .main{margin-left:260px;min-height:100vh}.top-bar{height:64px;background:#fff;border-bottom:1px solid #e2e8f0;padding:0 25px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:9}
+    .content{padding:25px;max-width:1400px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+    .stat-card{background:#fff;border-radius:12px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+    .stat-card span{color:#64748b;font-size:12px;font-weight:600}
+    .stat-card strong{display:block;font-size:24px;margin-top:6px;color:#0f172a}
+    .card{background:#fff;border-radius:12px;padding:20px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+    .btn{border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:600;font-size:12px;display:inline-flex;align-items:center;gap:6px}
+    .btn-primary{background:#0284c7;color:#fff}.btn-success{background:#16a34a;color:#fff}.btn-neutral{background:#f1f5f9;color:#334155}.btn-danger{background:#ef4444;color:#fff}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid #f1f5f9;font-size:13px}th{font-size:11px;color:#64748b;text-transform:uppercase;background:#f8fafc;font-weight:700}
+    .badge{display:inline-block;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600}.badge-pending{background:#fef3c7;color:#d97706}.badge-approved{background:#dcfce7;color:#15803d}.badge-info{background:#e0f2fe;color:#0369a1}
+    .filter-bar{display:flex;gap:10px;margin-bottom:20px;background:#fff;padding:12px;border-radius:10px;border:1px solid #e2e8f0;font-size:13px;align-items:center}
+    .filter-bar select{padding:7px 12px;border-radius:6px;border:1px solid #cbd5e1;font-size:13px;outline:none}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0 16px;font-size:13px;outline:none}
+    .hidden{display:none!important}
+    .step-tag{display:inline-block;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600}
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    📚 SÁCH HỌC ĐƯỜNG
+    <small>Nền tảng Tạp chí & Sách Trường học</small>
+  </div>
+  <nav class="side-nav">
+    <a class="active" onclick="switchTab('dashboard', this)">📊 Báo Cáo Tổng Quan</a>
+    <a onclick="switchTab('orgMgmt', this)">🏫 Quản Lý Trường & CLB</a>
+    <a onclick="switchTab('crmMembers', this)">👥 Hồ Sơ Thành Viên</a>
+    <a onclick="switchTab('bookStudio', this)">📖 Tiến Độ Tác Phẩm</a>    <a onclick="switchTab('contests', this)">🏆 Cuộc Thi & Chấm Điểm</a>
+    <a onclick="switchTab('publishing', this)">⚖️ Quy Trình Xuất Bản</a>
+    <a onclick="switchTab('auditLogs', this)">🛡️ Nhật Ký An Toàn</a>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="top-bar">
+    <div style="font-size:13px">Tài khoản: <strong id="roleLabel" style="color:#0284c7">Ch&#432;a &#273;&#259;ng nh&#7853;p</strong> <button id="loginNavButton" class="btn btn-neutral" type="button" onclick="switchTab('publishing')">&#272;&#259;ng nh&#7853;p</button><button id="logoutButton" class="btn btn-neutral" type="button" onclick="logoutAccount()" style="display:none">&#272;&#259;ng xu&#7845;t</button></div>
+    <div style="font-size:13px;display:flex;align-items:center;gap:12px">
+      <span>Đồng ý Phụ huynh: <span class="badge badge-approved">Đã xác nhận</span></span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- BÁO CÁO TỔNG QUAN -->
+    <div id="dashboard" class="tab-content active">
+      <div class="filter-bar">
+        <strong>Lọc theo khu vực:</strong>
+        <select><option>Tất cả Tỉnh/Thành</option><option>Hải Dương</option></select>
+        <select><option>Tất cả Quận/Huyện</option><option>TP. Hải Dương</option></select>
+        <select><option>Tất cả Trường</option><option>THPT Nguyễn Trãi</option></select>
+      </div>
+
+      <div class="grid-4">
+        <div class="stat-card"><span>Trường Đang Tham Gia</span><strong>28 Trường</strong></div>
+        <div class="stat-card"><span>Câu Lạc Bộ Sách Active</span><strong>64 CLB</strong></div>
+        <div class="stat-card"><span>Học Sinh & Giáo Viên</span><strong>12,480 HS / 850 GV</strong></div>
+        <div class="stat-card"><span>Sách & Tạp Chí Đã Hoàn Thành</span><strong>42 Sách / 18 Tạp chí</strong></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 style="margin:0;font-size:16px">📊 Bảng Xếp Hạng Đơn Vị Hoạt Động Tích Cực</h3>
+          <button class="btn btn-primary" type="button" onclick="exportSchoolReport()">Xuất Báo Cáo Excel</button>
+        </div>
+        <table>
+          <thead><tr><th>Thứ Hạng</th><th>Tên Trường</th><th>Số CLB</th><th>Sách Đang Viết</th><th>Số Tạp Chí Ra Mắt</th><th>Mức Độ Hoạt Động</th></tr></thead>
+          <tbody id="dashboardSchoolsTableBody"><tr><td colspan="6">Loading school report...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TIẾN ĐỘ TÁC PHẨM (Nối CSDL MySQL Thực Tế) -->
+    <div id="bookStudio" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="margin:0;font-size:16px">📖 Theo Dõi Tiến Độ Bản Thảo & Sách Đang Viết (Từ MySQL Workbench)</h3>
+          <button class="btn btn-primary" onclick="loadDbWorks()">🔄 Tải Lại Từ CSDL</button>
+        </div>
+        <table>
+          <thead><tr><th>Mã Bản Thảo</th><th>Tên Tác Phẩm</th><th>Thể Loai / Loại</th><th>Trạng Thái CSDL</th><th>Đánh Giá / Thao Tác</th></tr></thead>
+          <tbody id="dbWorksTableBody">
+          <tr><td colspan="5">Đang tải tác phẩm đã lưu...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CUỘC THI & CHẤM ĐIỂM -->
+    <div id="contests" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h3 style="margin:0;font-size:16px">🏆 Chấm Điểm Cuộc Thi Viết & Sáng Tạo Sách</h3>
+          <button class="btn btn-neutral" type="button" onclick="loadScoreWorks()">T&#7843;i l&#7841;i t&#225;c ph&#7849;m</button>
+        </div>
+        <label style="display:block;max-width:760px;font-size:13px;font-weight:600">T&#225;c ph&#7849;m &#273;&#227; l&#432;u
+          <select id="scoreWorkOption" class="input" required onchange="selectWorkToScore()"><option value="">&#272;ang t&#7843;i danh s&#225;ch t&#225;c ph&#7849;m...</option></select>
+        </label>
+        <p id="scoreMessage" role="status" style="font-size:12px;color:#64748b;margin-bottom:15px">Ch&#7885;n t&#225;c ph&#7849;m &#273;&#227; l&#432;u &#273;&#7875; nh&#7853;p &#273;i&#7875;m theo t&#7915;ng ti&#234;u ch&#237;.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 14px;max-width:760px">
+          <label>Ng&#432;&#7901;i ch&#7845;m *<input id="scoreReviewerName" class="input" maxlength="120" required></label>
+          <label>Vai tr&#242; / &#273;&#417;n v&#7883;<input id="scoreReviewerRole" class="input" maxlength="120"></label>
+        </div>
+
+        <table>
+          <thead><tr><th>Tiêu Chí Đánh Giá</th><th>Tỷ Trọng</th><th>AI Gợi Ý Ban Đầu</th><th>Điểm Giám Khảo Chấm (0-100)</th><th>Điểm Tính Được</th></tr></thead>
+          <tbody>
+          <tr><td>1. &#221; t&#432;&#7903;ng (M&#7899;i m&#7867;, &#253; ngh&#297;a)</td><td><b>25%</b></td><td>&mdash;</td><td><input id="r1" type="number" min="0" max="100" step="0.5" required placeholder="0&#8211;100" style="width:90px;padding:5px;border:1px solid #cbd5e1;border-radius:4px" onchange="calcRubric()"></td><td><b id="w1">0.00</b></td></tr>
+          <tr><td>2. N&#7897;i dung (M&#7841;ch l&#7841;c, gi&#224;u c&#7843;m x&#250;c)</td><td><b>25%</b></td><td>&mdash;</td><td><input id="r2" type="number" min="0" max="100" step="0.5" required placeholder="0&#8211;100" style="width:90px;padding:5px;border:1px solid #cbd5e1;border-radius:4px" onchange="calcRubric()"></td><td><b id="w2">0.00</b></td></tr>
+          <tr><td>3. Ng&#244;n ng&#7919; (S&#250;c t&#237;ch, &#273;&#250;ng ng&#7919; ph&#225;p)</td><td><b>20%</b></td><td>&mdash;</td><td><input id="r3" type="number" min="0" max="100" step="0.5" required placeholder="0&#8211;100" style="width:90px;padding:5px;border:1px solid #cbd5e1;border-radius:4px" onchange="calcRubric()"></td><td><b id="w3">0.00</b></td></tr>
+          <tr><td>4. S&#225;ng t&#7841;o (G&#243;c nh&#236;n &#273;&#7897;c &#273;&#225;o)</td><td><b>20%</b></td><td>&mdash;</td><td><input id="r4" type="number" min="0" max="100" step="0.5" required placeholder="0&#8211;100" style="width:90px;padding:5px;border:1px solid #cbd5e1;border-radius:4px" onchange="calcRubric()"></td><td><b id="w4">0.00</b></td></tr>
+          <tr><td>5. Tr&#236;nh b&#224;y (H&#236;nh &#7843;nh, b&#7889; c&#7909;c &#273;&#7865;p)</td><td><b>10%</b></td><td>&mdash;</td><td><input id="r5" type="number" min="0" max="100" step="0.5" required placeholder="0&#8211;100" style="width:90px;padding:5px;border:1px solid #cbd5e1;border-radius:4px" onchange="calcRubric()"></td><td><b id="w5">0.00</b></td></tr>
+          <tr style="background:#f8fafc">
+            <td colspan="3"><b>TỔNG ĐIỂM CUỐI CÙNG (ĐÃ TÍNH TRỌNG SỐ)</b></td>
+            <td colspan="2"><b id="rubricTotal" style="font-size:16px;color:#0284c7">0.00 / 100 &#273;i&#7875;m</b></td>
+          </tr>
+          </tbody>
+        </table>
+
+        <label style="display:block;margin-top:12px;max-width:760px">Nh&#7853;n x&#233;t<textarea id="scoreFeedback" class="input" rows="3" maxlength="5000"></textarea></label>
+        <div style="margin-top:15px"><button class="btn btn-success" type="button" onclick="saveWorkScore()">L&#432;u &#273;i&#7875;m t&#225;c ph&#7849;m</button></div>
+      </div>
+    </div>
+
+    <!-- CÁC TAB KHÁC GIỮ NGUYÊN GIAO DIỆN -->
+    <div id="orgMgmt" class="tab-content">
+      <div class="card">
+        <div class="card-header"><div><h3 style="margin:0">🏫 Quản lý Trường & Câu lạc bộ</h3><small style="color:#64748b">Dữ liệu lưu trực tiếp trong MySQL.</small></div><button class="btn btn-neutral" type="button" onclick="loadOrganizations()">Tải lại</button></div>
+        <form id="orgForm" onsubmit="saveOrganization(event)" style="max-width:760px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:20px">
+          <input id="orgId" type="hidden">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 14px">
+            <label>Loại đơn vị<select id="orgType" class="input" required onchange="updateOrgParentField()"><option value="SCHOOL">Trường học</option><option value="CLUB">Câu lạc bộ</option></select></label>
+            <label>Tên đơn vị<input id="orgName" class="input" maxlength="255" required placeholder="Ví dụ: THPT Nguyễn Trãi"></label>
+            <label>Mã đơn vị<input id="orgCode" class="input" maxlength="50" required placeholder="Ví dụ: THPT-NT"></label>
+            <label id="orgParentWrap" class="hidden">Trường quản lý<select id="orgParent" class="input"></select></label>
+            <label id="orgStatusWrap" class="hidden">Trạng thái<select id="orgStatus" class="input"><option value="ACTIVE">Đang hoạt động</option><option value="INACTIVE">Ngừng hoạt động</option></select></label>
+          </div>
+          <div style="display:flex;gap:8px"><button id="orgSaveButton" class="btn btn-primary" type="submit">Thêm đơn vị</button><button id="orgCancelButton" class="btn btn-neutral hidden" type="button" onclick="resetOrganizationForm()">Hủy sửa</button></div>
+          <p id="orgFormMessage" role="status" style="margin:10px 0 0;color:#b91c1c"></p>
+        </form>
+        <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Loại</th><th>Tên đơn vị</th><th>Mã</th><th>Trường quản lý</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="organizationsTableBody"><tr><td colspan="7">Đang tải...</td></tr></tbody></table></div>
+      </div>
+    </div>
+    <div id="crmMembers" class="tab-content">
+      <div class="card">
+        <div class="card-header"><div><h3 style="margin:0">👥 Hồ sơ Thành viên</h3><small style="color:#64748b">Thêm thành viên có tài khoản sẵn có, sửa thông tin hồ sơ và chức vụ trong đơn vị.</small></div><button class="btn btn-neutral" type="button" onclick="loadMembers()">Tải lại</button></div>
+        <form id="memberForm" onsubmit="saveMember(event)" style="max-width:900px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:20px">
+          <input id="membershipId" type="hidden">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px">
+            <label>Tài khoản có sẵn<select id="memberUser" class="input" required onchange="fillMemberProfile()"></select></label>
+            <label>Họ và tên<input id="memberName" class="input" maxlength="150" required></label>
+            <label>Email<input id="memberEmail" class="input" type="email" maxlength="150"></label>
+            <label>Số điện thoại<input id="memberPhone" class="input" type="tel" maxlength="20"></label>
+            <label>Trường / Câu lạc bộ<select id="memberOrg" class="input" required></select></label>
+            <label>Chức vụ trong đơn vị<input id="memberOrgRole" class="input" maxlength="100" placeholder="Ví dụ: Giáo viên hướng dẫn"></label>
+          </div>
+          <div style="display:flex;gap:8px"><button id="memberSaveButton" class="btn btn-primary" type="submit">Thêm vào đơn vị</button><button id="memberCancelButton" class="btn btn-neutral hidden" type="button" onclick="resetMemberForm()">Hủy sửa</button></div>
+          <p id="memberMessage" role="status" style="margin:10px 0 0;color:#b91c1c"></p>
+        </form>
+        <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Thành viên</th><th>Email / Điện thoại</th><th>Vai trò tài khoản</th><th>Đơn vị</th><th>Chức vụ</th><th>Thao tác</th></tr></thead><tbody id="membersTableBody"><tr><td colspan="7">Đang tải...</td></tr></tbody></table></div>
+      </div>
+    </div>
+    <div id="publishing" class="tab-content">
+      <div class="card">
+        <div class="card-header"><div><h3 style="margin:0">Quy tr&igrave;nh xu&#7845;t b&#7843;n</h3><small>Checklist tr&#432;&#7899;c khi g&#7917;i, theo d&otilde;i ph&#7843;n h&#7891;i &#273;&#7889;i t&aacute;c, l&#432;u file v&agrave; ch&#7913;ng t&#7915;.</small></div><button class="btn btn-neutral" type="button" onclick="loadPublishingData()">T&#7843;i l&#7841;i</button></div>
+        <div id="publicationLogin" style="display:none;max-width:520px;padding:16px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc">
+          <p>&#272;&#259;ng nh&#7853;p b&#7857;ng t&agrave;i kho&#7843;n v&agrave; vai tr&ograve; &#273;&atilde; &#273;&#432;&#7907;c c&#7845;u h&igrave;nh &#273;&#7875; qu&#7843;n l&yacute; quy tr&igrave;nh xu&#7845;t b&#7843;n.</p>
+          <form onsubmit="loginForPublishing(event)"><label>Vai tr&ograve;<select id="publicationLoginRole" class="input" required><option value="TEACHER">Gi&aacute;o vi&ecirc;n</option><option value="EDITOR">Bi&ecirc;n t&#7853;p vi&ecirc;n</option><option value="AUTHOR">T&aacute;c gi&#7843;</option><option value="SCHOOL_ADMIN">Qu&#7843;n tr&#7883; tr&#432;&#7901;ng</option><option value="SUPER_ADMIN">Qu&#7843;n tr&#7883; h&#7879; th&#7889;ng</option></select></label><label>Email<input id="publicationLoginEmail" class="input" type="email" required></label><label>M&#7853;t kh&#7849;u<input id="publicationLoginPassword" class="input" type="password" required></label><button class="btn btn-primary" type="submit">&#272;&#259;ng nh&#7853;p</button><p id="publicationLoginMessage" role="status"></p></form>
+        </div>
+        <div id="publicationWorkspace" style="display:none">
+          <details class="card" style="padding:14px;margin:14px 0"><summary style="cursor:pointer;font-weight:700">Th&ecirc;m h&#7891; s&#417; &#273;&#7889;i t&aacute;c xu&#7845;t b&#7843;n</summary>
+            <form onsubmit="createPublicationPartner(event)" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 12px;padding-top:10px">
+              <label>T&ecirc;n &#273;&#7889;i t&aacute;c<input id="partnerName" class="input" required maxlength="255"></label>
+              <label>Lo&#7841;i &#273;&#7889;i t&aacute;c<input id="partnerType" class="input" required maxlength="80" placeholder="Nh&agrave; xu&#7845;t b&#7843;n / T&#7841;p ch&iacute;"></label>
+              <label>Chuy&ecirc;n m&ocirc;n<input id="partnerSpecialty" class="input" maxlength="255"></label>
+              <label>Ng&#432;&#7901;i li&ecirc;n h&#7879;<input id="partnerContact" class="input" maxlength="150"></label>
+              <label>Email<input id="partnerEmail" class="input" type="email" maxlength="190"></label>
+              <label>&#272;i&#7879;n tho&#7841;i<input id="partnerPhone" class="input" maxlength="40"></label>
+              <div><button class="btn btn-primary" type="submit">L&#432;u &#273;&#7889;i t&aacute;c</button></div>
+            </form><p id="partnerMessage" role="status"></p>
+          </details>
+          <p style="padding:10px;background:#fff7ed;border-left:4px solid #f59e0b">Tr&#7841;ng th&aacute;i <b>&#272;&atilde; xu&#7845;t b&#7843;n (x&aacute;c nh&#7853;n)</b> ch&#7881; &#273;&#432;&#7907;c ghi sau khi nh&#7853;p ng&#432;&#7901;i x&aacute;c nh&#7853;n, ng&agrave;y x&aacute;c nh&#7853;n v&agrave; t&#7843;i l&ecirc;n ch&#7913;ng t&#7915; c&#7911;a &#273;&#7889;i t&aacute;c c&oacute; th&#7849;m quy&#7873;n.</p>
+          <div id="publicationList"><p>&#272;ang t&#7843;i...</p></div>
+        </div>
+      </div>
+    </div>
+    <div id="auditLogs" class="tab-content"><div class="card"><h3>🛡️ Nhật ký thao tác an toàn</h3></div></div>
+
+  </div>
+</div>
+
+<script>
+  let organizationsCache = [];
+  const escapeOrgHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function updateOrgParentField(){
+    const isClub = document.getElementById('orgType').value === 'CLUB';
+    document.getElementById('orgParentWrap').classList.toggle('hidden', !isClub);
+    const schools = organizationsCache.filter(org => org.type === 'SCHOOL');
+    document.getElementById('orgParent').innerHTML = '<option value="">Chọn trường</option>' + schools.map(s => `<option value="${s.id}">${escapeOrgHtml(s.name)} (${escapeOrgHtml(s.org_code)})</option>`).join('');
+  }
+  function resetOrganizationForm(){
+    document.getElementById('orgForm').reset();
+    document.getElementById('orgId').value = '';
+    document.getElementById('orgType').disabled = false;
+    document.getElementById('orgStatusWrap').classList.add('hidden');
+    document.getElementById('orgCancelButton').classList.add('hidden');
+    document.getElementById('orgSaveButton').textContent = 'Thêm đơn vị';
+    document.getElementById('orgFormMessage').textContent = '';
+    updateOrgParentField();
+  }
+  let dashboardSchoolsCache = [];
+  const schoolReportColumns = [
+    'Th\u1ee9 h\u1ea1ng', 'T\u00ean tr\u01b0\u1eddng', 'S\u1ed1 CLB ho\u1ea1t \u0111\u1ed9ng',
+    'T\u00e1c ph\u1ea9m \u0111ang vi\u1ebft (nh\u00e1p/ch\u1edd duy\u1ec7t)',
+    'T\u1ea1p ch\u00ed \u0111\u00e3 xu\u1ea5t b\u1ea3n',
+    'Ch\u1ec9 s\u1ed1 ho\u1ea1t \u0111\u1ed9ng (t\u1ed5ng c\u00e1c m\u1ee5c tr\u00ean)'
+  ];
+  async function loadDashboardSchools(){
+    const tbody = document.getElementById('dashboardSchoolsTableBody');
+    if(!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6">\u0110ang t\u1ea3i b\u00e1o c\u00e1o...</td></tr>';
+    try{
+      const result = await readApiJson(await fetch('/api/v1/school/reports/schools'));
+      dashboardSchoolsCache = result.data || [];
+      tbody.innerHTML = dashboardSchoolsCache.length ? dashboardSchoolsCache.map(school => `<tr>
+        <td>${school.rank}</td><td><b>${escapeOrgHtml(school.name)}</b></td><td>${Number(school.club_count)}</td>
+        <td>${Number(school.works_in_progress)}</td><td>${Number(school.published_magazines)}</td>
+        <td><span class="badge badge-info">${Number(school.activity_count)}</span></td>
+      </tr>`).join('') : '<tr><td colspan="6">CSDL ch\u01b0a c\u00f3 tr\u01b0\u1eddng.</td></tr>';
+    }catch(error){ tbody.innerHTML = `<tr><td colspan="6">${escapeOrgHtml(error.message || 'Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c b\u00e1o c\u00e1o.')}</td></tr>`; }
+  }
+  async function exportSchoolReport(){
+    let saveHandle = null;
+    if(typeof window.showSaveFilePicker === 'function'){
+      try{
+        saveHandle = await window.showSaveFilePicker({
+          suggestedName: 'bao-cao-truong-clb.csv',
+          types: [{description: 'CSV spreadsheet for Excel', accept: {'text/csv': ['.csv']}}]
+        });
+      }catch(error){ if(error.name === 'AbortError') return; alert(error.message || 'Could not open the save dialog.'); return; }
+    }
+    try{
+      const result = await readApiJson(await fetch('/api/v1/school/reports/schools'));
+      dashboardSchoolsCache = result.data || [];
+      const quote = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+      const rows = [schoolReportColumns, ...dashboardSchoolsCache.map(school => [
+        school.rank, school.name, school.club_count, school.works_in_progress,
+        school.published_magazines, school.activity_count
+      ])];
+      const csv = '\uFEFF' + rows.map(row => row.map(quote).join(';')).join('\r\n');
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+      if(saveHandle){
+        const writable = await saveHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+      }else{
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'bao-cao-truong-clb.csv';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        alert('Download started. To show a save dialog, enable "Ask where to save each file" in your browser settings.');
+      }
+    }catch(error){ alert(error.message || 'Could not export the school report.'); }
+  }
+  async function loadOrganizations(){
+    const body = document.getElementById('organizationsTableBody');
+    body.innerHTML = '<tr><td colspan="7">Đang tải...</td></tr>';
+    try{
+      const response = await fetch('/api/v1/school/organizations');
+      const result = await readApiJson(response);
+      organizationsCache = result.data || [];
+      updateOrgParentField();
+      body.innerHTML = organizationsCache.length ? organizationsCache.map(org => `<tr>
+        <td>${org.id}</td><td>${org.type === 'SCHOOL' ? 'Trường' : 'Câu lạc bộ'}</td>
+        <td><b>${escapeOrgHtml(org.name)}</b></td><td><code>${escapeOrgHtml(org.org_code)}</code></td>
+        <td>${escapeOrgHtml(org.parent_name || '—')}</td>
+        <td><span class="badge ${org.status === 'ACTIVE' ? 'badge-approved' : 'badge-pending'}">${org.status === 'ACTIVE' ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
+        <td><button class="btn btn-primary" type="button" onclick="editOrganization(${org.id})">Sửa</button> <button class="btn btn-danger" type="button" onclick="deleteOrganization(${org.id})">Xóa</button></td>
+      </tr>`).join('') : '<tr><td colspan="7">Chưa có trường hoặc câu lạc bộ. Hãy thêm đơn vị mới.</td></tr>';
+    }catch(error){
+      body.innerHTML = `<tr><td colspan="7">${escapeOrgHtml(error.message || 'Không tải được danh sách đơn vị.')}</td></tr>`;
+    }
+  }
+  function editOrganization(id){
+    const org = organizationsCache.find(item => item.id === id);
+    if(!org) return;
+    document.getElementById('orgId').value = org.id;
+    document.getElementById('orgType').value = org.type;
+    document.getElementById('orgType').disabled = true;
+    document.getElementById('orgName').value = org.name;
+    document.getElementById('orgCode').value = org.org_code;
+    document.getElementById('orgStatus').value = org.status;
+    updateOrgParentField();
+    document.getElementById('orgParent').value = org.parent_id || '';
+    document.getElementById('orgStatusWrap').classList.remove('hidden');
+    document.getElementById('orgCancelButton').classList.remove('hidden');
+    document.getElementById('orgSaveButton').textContent = 'Lưu thay đổi';
+    document.getElementById('orgFormMessage').textContent = '';
+    document.getElementById('orgForm').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  async function saveOrganization(event){
+    event.preventDefault();
+    const id = document.getElementById('orgId').value;
+    const payload = {
+      type: document.getElementById('orgType').value,
+      name: document.getElementById('orgName').value.trim(),
+      org_code: document.getElementById('orgCode').value.trim(),
+      parent_id: document.getElementById('orgParent').value || null,
+      status: document.getElementById('orgStatus').value
+    };
+    const message = document.getElementById('orgFormMessage');
+    try{
+      const response = await fetch(id ? `/api/v1/school/organizations/${id}` : '/api/v1/school/organizations', {
+        method: id ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      });
+      const result = await readApiJson(response);
+      resetOrganizationForm();
+      await loadOrganizations();
+      message.textContent = result.message || 'Đã lưu đơn vị.';
+      message.style.color = '#15803d';
+    }catch(error){ message.textContent = error.message || 'Không lưu được đơn vị.'; message.style.color = '#b91c1c'; }
+  }
+  async function deleteOrganization(id){
+    const org = organizationsCache.find(item => item.id === id);
+    if(!org || !confirm(`Xóa ${org.type === 'SCHOOL' ? 'trường' : 'câu lạc bộ'} “${org.name}”? Đơn vị có dữ liệu liên quan sẽ không thể xóa.`)) return;
+    try{
+      const result = await readApiJson(await fetch(`/api/v1/school/organizations/${id}`, {method:'DELETE'}));
+      alert(result.message || 'Đã xóa đơn vị.');
+      loadOrganizations();
+    }catch(error){ alert(error.message || 'Không xóa được đơn vị.'); }
+  }
+  let membersCache = [], memberUsers = [], memberOrganizations = [];
+  function fillMemberProfile(){
+    const user = memberUsers.find(item => String(item.id) === document.getElementById('memberUser').value);
+    if(!user) return;
+    document.getElementById('memberName').value = user.full_name || '';
+    document.getElementById('memberEmail').value = user.email || '';
+    document.getElementById('memberPhone').value = user.phone || '';
+  }
+  function resetMemberForm(){
+    document.getElementById('memberForm').reset();
+    document.getElementById('membershipId').value = '';
+    document.getElementById('memberUser').disabled = false;
+    document.getElementById('memberCancelButton').classList.add('hidden');
+    document.getElementById('memberSaveButton').textContent = 'Thêm vào đơn vị';
+    document.getElementById('memberMessage').textContent = '';
+  }
+  async function loadMembers(){
+    const body = document.getElementById('membersTableBody');
+    body.innerHTML = '<tr><td colspan="7">Đang tải...</td></tr>';
+    try{
+      const result = await readApiJson(await fetch('/api/v1/school/members'));
+      membersCache = result.data.members || [];
+      memberUsers = result.data.users || [];
+      memberOrganizations = result.data.organizations || [];
+      document.getElementById('memberUser').innerHTML = '<option value="">Chọn tài khoản</option>' + memberUsers.map(user => `<option value="${user.id}">${escapeOrgHtml(user.full_name)} · #${user.id}</option>`).join('');
+      document.getElementById('memberOrg').innerHTML = '<option value="">Chọn trường / CLB</option>' + memberOrganizations.map(org => `<option value="${org.id}">${escapeOrgHtml(org.name)} (${org.type === 'SCHOOL' ? 'Trường' : 'CLB'})</option>`).join('');
+      body.innerHTML = membersCache.length ? membersCache.map(member => `<tr>
+        <td>${member.membership_id}</td><td><b>${escapeOrgHtml(member.full_name)}</b><br><small>#${member.user_id}</small></td>
+        <td>${escapeOrgHtml(member.email || '—')}<br>${escapeOrgHtml(member.phone || '—')}</td>
+        <td>${escapeOrgHtml(member.role)}</td><td>${escapeOrgHtml(member.organization_name)}</td>
+        <td>${escapeOrgHtml(member.role_in_org || '—')}</td>
+        <td><button class="btn btn-primary" type="button" onclick="editMember(${member.membership_id})">Sửa</button> <button class="btn btn-danger" type="button" onclick="deleteMember(${member.membership_id})">Gỡ</button></td>
+      </tr>`).join('') : '<tr><td colspan="7">Chưa có thành viên thuộc trường hoặc CLB.</td></tr>';
+    }catch(error){ body.innerHTML = `<tr><td colspan="7">${escapeOrgHtml(error.message || 'Không tải được hồ sơ thành viên.')}</td></tr>`; }
+  }
+  function editMember(id){
+    const member = membersCache.find(item => item.membership_id === id);
+    if(!member) return;
+    document.getElementById('membershipId').value = member.membership_id;
+    document.getElementById('memberUser').value = member.user_id;
+    document.getElementById('memberUser').disabled = true;
+    document.getElementById('memberName').value = member.full_name || '';
+    document.getElementById('memberEmail').value = member.email || '';
+    document.getElementById('memberPhone').value = member.phone || '';
+    document.getElementById('memberOrg').value = member.organization_id;
+    document.getElementById('memberOrgRole').value = member.role_in_org || '';
+    document.getElementById('memberCancelButton').classList.remove('hidden');
+    document.getElementById('memberSaveButton').textContent = 'Lưu thay đổi';
+    document.getElementById('memberMessage').textContent = '';
+    document.getElementById('memberForm').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  async function saveMember(event){
+    event.preventDefault();
+    const id = document.getElementById('membershipId').value;
+    const payload = {
+      user_id: document.getElementById('memberUser').value,
+      full_name: document.getElementById('memberName').value.trim(),
+      email: document.getElementById('memberEmail').value.trim(),
+      phone: document.getElementById('memberPhone').value.trim(),
+      organization_id: document.getElementById('memberOrg').value,
+      role_in_org: document.getElementById('memberOrgRole').value.trim()
+    };
+    const message = document.getElementById('memberMessage');
+    try{
+      const response = await fetch(id ? `/api/v1/school/members/${id}` : '/api/v1/school/members', {method:id ? 'PUT' : 'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+      const result = await readApiJson(response);
+      resetMemberForm();
+      await loadMembers();
+      alert(result.message || 'Đã lưu hồ sơ thành viên.');
+    }catch(error){ message.textContent = error.message || 'Không lưu được hồ sơ thành viên.'; }
+  }
+  async function deleteMember(id){
+    const member = membersCache.find(item => item.membership_id === id);
+    if(!member || !confirm(`Gỡ ${member.full_name} khỏi ${member.organization_name}? Hồ sơ người dùng vẫn được giữ.`)) return;
+    try{
+      const result = await readApiJson(await fetch(`/api/v1/school/members/${id}`, {method:'DELETE'}));
+      alert(result.message || 'Đã gỡ thành viên.');
+      loadMembers();
+    }catch(error){ alert(error.message || 'Không gỡ được thành viên.'); }
+  }
+  let publicationWorks=[]; let publicationPartners=[]; let publicationFiles=[]; let publicationEvents=[];
+  const publicationStages=['DRAFT','READY_TO_SEND','SENT_TO_PARTNER','REVISION_REQUIRED','PARTNER_ACCEPTED','PUBLISHED_CONFIRMED'];
+  const publicationStageLabels={DRAFT:'Preflight',READY_TO_SEND:'S&#7861;n s&agrave;ng g&#7917;i',SENT_TO_PARTNER:'&#272;&atilde; g&#7917;i &#273;&#7889;i t&aacute;c',REVISION_REQUIRED:'C&#7847;n ch&#7881;nh s&#7917;a',PARTNER_ACCEPTED:'&#272;&#7889;i t&aacute;c ch&#7845;p nh&#7853;n',PUBLISHED_CONFIRMED:'&#272;&atilde; xu&#7845;t b&#7843;n (x&aacute;c nh&#7853;n)'};
+  const publicationChecklist=[['authors','T&aacute;c gi&#7843; &#273;&#432;&#7907;c x&aacute;c nh&#7853;n'],['rights','B&#7843;n quy&#7873;n / quy&#7873;n s&#7917; d&#7909;ng'],['sources','Ngu&#7891;n tr&iacute;ch d&#7851;n v&agrave; t&#432; li&#7879;u'],['editing','Bi&ecirc;n t&#7853;p n&#7897;i dung'],['design','Thi&#7871;t k&#7871; v&agrave; d&agrave;n trang'],['publicationInfo','Th&ocirc;ng tin xu&#7845;t b&#7843;n (ISBN, nh&agrave; XB, th&#244;ng tin li&ecirc;n quan)']];
+  const accountRoleLabels={SUPER_ADMIN:'Quản trị hệ thống',SCHOOL_ADMIN:'Quản trị trường',TEACHER:'Giáo viên',EDITOR:'Biên tập viên',AUTHOR:'Tác giả'};
+  function updateAccountHeader(user){const label=document.getElementById('roleLabel');if(user){label.textContent=(user.full_name||'Tài khoản')+' ('+(accountRoleLabels[user.role]||user.role)+')';document.getElementById('loginNavButton').style.display='none';document.getElementById('logoutButton').style.display='inline-block';}else{label.textContent='Chưa đăng nhập';document.getElementById('loginNavButton').style.display='inline-block';document.getElementById('logoutButton').style.display='none';}}
+  async function refreshAccountHeader(){try{const result=await readApiJson(fetch('/api/v1/auth/session'));updateAccountHeader(result.data);}catch(_){updateAccountHeader(null);}}
+  async function logoutAccount(){try{await readApiJson(await fetch('/api/v1/auth/logout',{method:'POST'}));updateAccountHeader(null);document.getElementById('publicationWorkspace').style.display='none';document.getElementById('publicationLogin').style.display='block';}catch(error){alert(error.message||'Không thể đăng xuất.');}}
+  async function loginForPublishing(event){event.preventDefault();const message=document.getElementById('publicationLoginMessage');try{const result=await readApiJson(await fetch('/api/v1/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:document.getElementById('publicationLoginRole').value,email:document.getElementById('publicationLoginEmail').value,password:document.getElementById('publicationLoginPassword').value})}));document.getElementById('publicationLoginPassword').value='';updateAccountHeader(result.data);await loadPublishingData();}catch(error){message.textContent=error.message||'Không thể đăng nhập.';}}
+  async function loadPublishingData(){
+    try{
+      const [worksResult,partnersResult,filesResult,eventsResult]=await Promise.all([readApiJson(fetch('/api/v1/school/publications')),readApiJson(fetch('/api/v1/school/publication-partners')),readApiJson(fetch('/api/v1/school/publication-files')),readApiJson(fetch('/api/v1/school/publication-events'))]);
+      publicationWorks=worksResult.data||[];publicationPartners=partnersResult.data||[];publicationFiles=filesResult.data||[];publicationEvents=eventsResult.data||[];
+      document.getElementById('publicationLogin').style.display='none';document.getElementById('publicationWorkspace').style.display='block';renderPublicationWorks();
+    }catch(error){document.getElementById('publicationWorkspace').style.display='none';document.getElementById('publicationLogin').style.display='block';document.getElementById('publicationLoginMessage').textContent=error.message||'Sign in to load publishing records.';}
+  }
+  async function createPublicationPartner(event){event.preventDefault();const message=document.getElementById('partnerMessage');try{await readApiJson(await fetch('/api/v1/school/publication-partners',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('partnerName').value,partner_type:document.getElementById('partnerType').value,specialty:document.getElementById('partnerSpecialty').value,contact_name:document.getElementById('partnerContact').value,email:document.getElementById('partnerEmail').value,phone:document.getElementById('partnerPhone').value})}));event.target.reset();message.textContent='Partner saved.';await loadPublishingData();}catch(error){message.textContent=error.message||'Could not save partner.';}}
+  function renderPublicationWorks(){
+    const root=document.getElementById('publicationList');if(!publicationWorks.length){root.innerHTML='<p>Ch&#432;a c&oacute; t&aacute;c ph&#7849;m &#273;&atilde; duy&#7879;t &#273;&#7875; l&#7853;p h&#7891; s&#417; xu&#7845;t b&#7843;n.</p>';return;}
+    root.innerHTML=publicationWorks.map(work=>{
+      const id=Number(work.work_id),status=work.status||'DRAFT',checklist=work.checklist_json||{},files=publicationFiles.filter(file=>Number(file.work_id)===id);
+      const partnerOptions='<option value="">Ch&#7885;n &#273;&#7889;i t&aacute;c</option>'+publicationPartners.map(partner=>'<option value="'+Number(partner.id)+'" '+(Number(work.partner_id)===Number(partner.id)?'selected':'')+'>'+escapeOrgHtml(partner.name)+' &mdash; '+escapeOrgHtml(partner.partner_type)+' ('+escapeOrgHtml(partner.specialty||'')+')</option>').join('');
+      const checklistHtml=publicationChecklist.map(([key,label])=>'<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pub-'+key+'-'+id+'" '+(checklist[key]?'checked':'')+'> '+label+'</label>').join('');
+      const filesHtml=files.map(file=>'<li><a href="/api/v1/school/publication-files/'+Number(file.id)+'/download" target="_blank">'+escapeOrgHtml(file.file_name)+'</a> &mdash; '+escapeOrgHtml(file.doc_type)+' ('+Math.ceil(Number(file.file_size)/1024)+' KB)</li>').join('')||'<li>Ch&#432;a c&oacute; t&agrave;i li&#7879;u.</li>';
+      const progress=publicationStages.map((stage,index)=>'<span style="padding:5px 8px;border-radius:12px;background:'+(publicationStages.indexOf(status)>=index?'#dcfce7':'#f1f5f9')+';color:#334155;font-size:11px">'+(index+1)+'. '+publicationStageLabels[stage]+'</span>').join(' ');
+      const eventHtml=publicationEvents.filter(event=>Number(event.work_id)===id).map(event=>'<li><b>'+escapeOrgHtml(event.event_date||'')+'</b> &mdash; '+escapeOrgHtml(event.event_type)+' &mdash; '+escapeOrgHtml(event.detail||'')+'</li>').join('')||'<li>Ch&#432;a c&oacute; l&#7883;ch s&#7917; g&#7917;i/nh&#7853;n ph&#7843;n h&#7891;i.</li>'; 
+      let action='';if(status==='DRAFT'||status==='REVISION_REQUIRED')action='<button class="btn btn-primary" onclick="savePublication('+id+',&#39;MARK_READY&#39;)">Checklist xong &mdash; s&#7861;n s&agrave;ng g&#7917;i</button>';
+      else if(status==='READY_TO_SEND')action='<button class="btn btn-primary" onclick="savePublication('+id+',&#39;MARK_SENT&#39;)">Ghi nh&#7853;n &#273;&atilde; g&#7917;i</button>';
+      else if(status==='SENT_TO_PARTNER'||status==='REVISION_REQUIRED')action='<button class="btn btn-neutral" onclick="savePublication('+id+',&#39;RECORD_RESPONSE&#39;)">L&#432;u ph&#7843;n h&#7891;i &#273;&#7889;i t&aacute;c</button>';
+      else if(status==='PARTNER_ACCEPTED')action='<button class="btn btn-success" onclick="savePublication('+id+',&#39;CONFIRM_PUBLISHED&#39;)">X&aacute;c nh&#7853;n &#273;&atilde; xu&#7845;t b&#7843;n (c&#7847;n ch&#7913;ng t&#7915;)</button>';
+      else action='<strong style="color:#166534">Ch&#7881; ghi nh&#7853;n &#273;&atilde; xu&#7845;t b&#7843;n sau khi c&oacute; x&aacute;c nh&#7853;n &#273;&#7889;i t&aacute;c.</strong>';
+      return '<article class="card" style="padding:16px;margin:14px 0"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h3 style="margin:0">'+escapeOrgHtml(work.title)+' <small>#'+id+'</small></h3><div style="font-size:12px;color:#64748b">'+(work.author_names?'T&aacute;c gi&#7843;: '+escapeOrgHtml(work.author_names):'')+' &middot; '+escapeOrgHtml(work.category||work.content_type||'')+'</div><span class="badge badge-pending">'+(publicationStageLabels[status]||status)+'</span></div></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin:12px 0">'+progress+'</div><details style="margin:8px 0"><summary>L&#7883;ch s&#7917; workflow / ng&agrave;y g&#7917;i v&agrave; ph&#7843;n h&#7891;i</summary><ul>'+eventHtml+'</ul></details><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px"><section><h4>Preflight checklist</h4>'+checklistHtml+'</section><section><h4>&#272;&#7889;i t&aacute;c ph&ugrave; h&#7907;p</h4><select id="pub-partner-'+id+'" class="input">'+partnerOptions+'</select><label>ISBN<input id="pub-isbn-'+id+'" class="input" value="'+escapeOrgHtml(work.isbn||'')+'" maxlength="32"></label><label>Nh&agrave; xu&#7845;t b&#7843;n<input id="pub-publisher-'+id+'" class="input" value="'+escapeOrgHtml(work.publisher_name||'')+'" maxlength="255"></label></section><section><h4>G&#7917;i / ph&#7843;n h&#7891;i</h4><label>Ng&agrave;y g&#7917;i<input id="pub-sent-'+id+'" class="input" type="date" value="'+escapeOrgHtml(work.sent_at||'')+'"></label><label>Ng&agrave;y nh&#7853;n ph&#7843;n h&#7891;i<input id="pub-response-date-'+id+'" class="input" type="date" value="'+escapeOrgHtml(work.response_at||'')+'"></label><label>K&#7871;t qu&#7843; ph&#7843;n h&#7891;i<select id="pub-response-decision-'+id+'" class="input"><option value="REVISION_REQUIRED">Y&ecirc;u c&#7847;u ch&#7881;nh s&#7917;a</option><option value="PARTNER_ACCEPTED">&#272;&#7889;i t&aacute;c ch&#7845;p nh&#7853;n</option></select></label><label>N&#7897;i dung ph&#7843;n h&#7891;i<textarea id="pub-response-note-'+id+'" class="input" rows="2">'+escapeOrgHtml(work.response_note||'')+'</textarea></label></section><section><h4>X&aacute;c nh&#7853;n c&oacute; th&#7849;m quy&#7873;n</h4><label>Ng&#432;&#7901;i x&aacute;c nh&#7853;n<input id="pub-confirm-name-'+id+'" class="input" value="'+escapeOrgHtml(work.confirmation_name||'')+'" maxlength="150"></label><label>Ng&agrave;y x&aacute;c nh&#7853;n xu&#7845;t b&#7843;n<input id="pub-confirm-date-'+id+'" class="input" type="date" value="'+escapeOrgHtml(work.confirmation_date||'')+'"></label><label>Ghi ch&uacute;<textarea id="pub-notes-'+id+'" class="input" rows="2">'+escapeOrgHtml(work.notes||'')+'</textarea></label></section></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn btn-neutral" onclick="savePublication('+id+',&#39;SAVE&#39;)">L&#432;u h&#7891; s&#417;</button>'+action+'</div><div style="border-top:1px solid #e2e8f0;padding-top:10px"><h4>Kho file master / ph&ecirc; duy&#7879;t / ph&#7843;n h&#7891;i</h4><label>Lo&#7841;i t&agrave;i li&#7879;u<select id="pub-file-type-'+id+'" class="input"><option value="MASTER">File master</option><option value="APPROVAL">T&agrave;i li&#7879;u ph&ecirc; duy&#7879;t</option><option value="PARTNER_RESPONSE">Ph&#7843;n h&#7891;i &#273;&#7889;i t&aacute;c</option><option value="PUBLICATION_CONFIRMATION">X&aacute;c nh&#7853;n xu&#7845;t b&#7843;n</option><option value="OTHER">Kh&aacute;c</option></select></label><input id="pub-file-'+id+'" type="file" class="input" accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.md,.indd,.idml,.ai,.psd,.eps,.png,.jpg,.jpeg,.zip"><button class="btn btn-neutral" type="button" onclick="uploadPublicationFile('+id+')">L&#432;u file</button><ul>'+filesHtml+'</ul></div><p id="pub-message-'+id+'" role="status"></p></article>';
+    }).join('');
+  }
+  async function savePublication(id,action){
+    const get=key=>document.getElementById('pub-'+key+'-'+id);const checklist={};publicationChecklist.forEach(([key])=>checklist[key]=get(key).checked);
+    const body={action,checklist,partner_id:get('partner').value||null,isbn:get('isbn').value,publisher_name:get('publisher').value,sent_at:get('sent').value,response_at:get('response-date').value,response_decision:get('response-decision').value,response_note:get('response-note').value,confirmation_name:get('confirm-name').value,confirmation_date:get('confirm-date').value,notes:get('notes').value};
+    const message=document.getElementById('pub-message-'+id);try{const result=await readApiJson(await fetch('/api/v1/school/publications/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}));message.textContent=result.message||'Saved.';await loadPublishingData();}catch(error){message.textContent=error.message||'Could not save publishing record.';}
+  }
+  async function uploadPublicationFile(id){const input=document.getElementById('pub-file-'+id),file=input.files[0];if(!file)return alert('Select a file first.');const message=document.getElementById('pub-message-'+id);try{await readApiJson(await fetch('/api/v1/school/publications/'+id+'/files',{method:'POST',headers:{'Content-Type':'application/octet-stream','X-File-Name':encodeURIComponent(file.name),'X-Document-Type':document.getElementById('pub-file-type-'+id).value},body:file}));input.value='';await loadPublishingData();}catch(error){message.textContent=error.message||'Could not upload file.';}}
+
+  function switchTab(tabId, el, skipLoad){
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.side-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if(el) el.classList.add('active');
+    if(tabId === 'bookStudio') loadDbWorks();
+    if(tabId === 'orgMgmt') loadOrganizations();
+    if(tabId === 'crmMembers') loadMembers();
+    if(tabId === 'publishing' && !skipLoad) loadPublishingData();
+    if(tabId === 'contests' && !skipLoad) loadScoreWorks();
+  }
+
+  // Nối API CSDL MySQL
+  function calcRubric(){
+    const weights=[0.25,0.25,0.20,0.20,0.10]; let total=0;
+    weights.forEach((weight,index)=>{const score=Number(document.getElementById('r'+(index+1)).value)||0;const weighted=score*weight;document.getElementById('w'+(index+1)).innerText=weighted.toFixed(2);total+=weighted;});
+    document.getElementById('rubricTotal').innerText=total.toFixed(2)+' / 100 '+String.fromCharCode(273,105,7875,109);
+  }
+
+  async function readApiJson(response) {
+    response = await response;
+    const body = await response.text();
+    let data;
+    try { data = JSON.parse(body); }
+    catch (_) {
+      if (/^\s*<!doctype\s+html|^\s*<html/i.test(body)) {
+        throw new Error(`API trả về HTML (${response.status}). Hãy mở trang quản trị qua http://localhost:3000/school-admin và bảo đảm app.js đang chạy.`);
+      }
+      throw new Error(`API trả dữ liệu không hợp lệ (${response.status}).`);
+    }
+    if (!response.ok || data.success === false) throw new Error(data.error || data.message || `Yêu cầu thất bại (${response.status}).`);
+    return data;
+  }
+
+  let worksCache = [];
+  let currentScoreId = null;
+  async function loadDbWorks() {
+    try {
+      const res = await fetch('/api/v1/school/works');
+      const data = await readApiJson(res);
+      worksCache = data.data || [];
+      if(data.success && data.data.length > 0) {
+        document.getElementById('dbWorksTableBody').innerHTML = data.data.map(w => `
+        <tr>
+          <td><code>WORK-${w.id}</code></td>
+          <td><b>"${escapeOrgHtml(w.title)}"</b></td>
+          <td>${w.content_type || 'ARTICLE'}</td>
+          <td><span class="badge ${w.moderation_status==='APPROVED'?'badge-approved':'badge-pending'}">${escapeOrgHtml(w.moderation_status || 'PENDING')}</span>${w.latest_score != null ? '<div style="font-size:12px">Score ' + Number(w.latest_score).toFixed(2) + ' ? ' + escapeOrgHtml(w.latest_reviewer_name || '') + '</div>' : ''}</td>
+          <td>
+            ${w.latest_score != null ? `<button class="btn btn-neutral" onclick="editWorkScore(${w.id})">S&#7917;a &#273;i&#7875;m</button>` : ''}
+            ${w.moderation_status === 'APPROVED' ? '' : `<button class="btn btn-primary" onclick="approveWork(${w.id})">Duy&#7879;t</button>`}
+            <button class="btn btn-danger" onclick="deleteDbWork(${w.id})">Xóa</button>
+          </td>
+        </tr>
+      `).join('');
+      } else if(data.success) {
+        document.getElementById('dbWorksTableBody').innerHTML = '<tr><td colspan="5">Chưa có tác phẩm trong CSDL.</td></tr>';
+      } else throw new Error(data.error || 'Không tải được tác phẩm.');
+    } catch(e) {
+      const message = (e.message || 'Không kết nối được máy chủ.').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      document.getElementById('dbWorksTableBody').innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+    }
+  }
+
+  async function approveWork(id) {
+    if(!confirm('Approve this work?')) return;
+    try {
+      const result=await readApiJson(await fetch('/api/v1/school/works/'+id+'/approval',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision:'APPROVED'})}));
+      alert(result.message||'Work approved.'); await Promise.all([loadDbWorks(),loadScoreWorks()]);
+    } catch(error) { alert(error.message||'Could not approve this work.'); }
+  }
+
+  async function editWorkScore(id) {
+    const tabLink=[...document.querySelectorAll('.side-nav a')].find(link=>link.getAttribute('onclick')?.includes("'contests'"));
+    switchTab('contests',tabLink,true);
+    await loadScoreWorks();
+    const select=document.getElementById('scoreWorkOption'); select.value=String(id); selectWorkToScore();
+  }
+
+  async function deleteDbWork(id) {
+    if(!confirm('Xác nhận xóa bài viết khỏi CSDL?')) return;
+    try {
+      const res = await fetch(`/api/v1/school/works/${id}`, { method: 'DELETE' });
+      const data = await readApiJson(res);
+      alert('Đã xóa thành công!');
+      loadDbWorks();
+    } catch(e) { alert(e.message || 'Không thể xóa bài!'); }
+  }
+
+  async function loadScoreWorks(){
+    const select=document.getElementById('scoreWorkOption'), message=document.getElementById('scoreMessage');
+    select.innerHTML='<option value="">Loading...</option>';
+    try { const result=await readApiJson(await fetch('/api/v1/school/works')); worksCache=result.data||[];
+      select.innerHTML='<option value="">Select a saved work</option>'+worksCache.map(work=>'<option value="'+Number(work.id)+'">'+escapeOrgHtml(work.title)+' &#8212; #'+Number(work.id)+' &#8212; '+escapeOrgHtml(work.moderation_status||'PENDING')+'</option>').join('');
+      message.textContent='Có '+worksCache.length+' tác phẩm đã lưu. Chọn một tác phẩm để chấm.';
+    } catch(error) { select.innerHTML='<option value="">List unavailable</option>'; message.textContent=error.message||'Không tải được tác phẩm.'; }
+  }
+  function selectWorkToScore(){
+    const id=Number(document.getElementById('scoreWorkOption').value), work=worksCache.find(item=>Number(item.id)===id), message=document.getElementById('scoreMessage');
+    [1,2,3,4,5].forEach(i=>document.getElementById('r'+i).value=''); document.getElementById('scoreFeedback').value='';
+    currentScoreId=work&&work.latest_score_id?Number(work.latest_score_id):null;
+    if(work&&work.latest_score!=null){let criteria=work.latest_criteria;if(typeof criteria==='string'){try{criteria=JSON.parse(criteria)}catch(_){criteria=[]}}
+      (criteria||[]).forEach((item,index)=>{if(index<5)document.getElementById('r'+(index+1)).value=item.score});
+      document.getElementById('scoreReviewerName').value=work.latest_reviewer_name||'';document.getElementById('scoreReviewerRole').value=work.latest_reviewer_role||'';document.getElementById('scoreFeedback').value=work.latest_feedback||'';
+      message.textContent='Điểm gần nhất: '+Number(work.latest_score).toFixed(2)+' ? người chấm: '+(work.latest_reviewer_name||'unknown')+'. Lưu lần nữa sẽ tạo bản chấm mới.';
+    }else{document.getElementById('scoreReviewerName').value='';document.getElementById('scoreReviewerRole').value='';message.textContent=work?'Nhập điểm cho tác phẩm: '+work.title:'Chọn tác phẩm đã lưu để chấm.';}
+    calcRubric();
+  }
+  async function saveWorkScore(){
+    const workId=Number(document.getElementById('scoreWorkOption').value),reviewer_name=document.getElementById('scoreReviewerName').value.trim(),reviewer_role=document.getElementById('scoreReviewerRole').value.trim(),feedback=document.getElementById('scoreFeedback').value;
+    const labels=['\u00dd t\u01b0\u1edfng','N\u1ed9i dung','Ng\u00f4n ng\u1eef','S\u00e1ng t\u1ea1o','Tr\u00ecnh b\u00e0y'],weights=[0.25,0.25,0.20,0.20,0.10];
+    const criteria=labels.map((name,index)=>({name,weight:weights[index],score:Number(document.getElementById('r'+(index+1)).value)}));
+    if(!workId)return alert('Hãy chọn tác phẩm đã lưu.');if(reviewer_name.length<2)return alert('Nhập tên người chấm (ít nhất 2 ký tự).');
+    if([1,2,3,4,5].some(i=>document.getElementById('r'+i).value.trim()==='')||criteria.some(item=>!Number.isFinite(item.score)||item.score<0||item.score>100))return alert('Nhập đủ 5 tiêu chí, mỗi điểm từ 0 đến 100.');
+    try{const result=await readApiJson(await fetch('/api/v1/school/works/'+workId+'/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({criteria,reviewer_name,reviewer_role,feedback,score_id:currentScoreId})}));
+      alert(result.message||'Đã lưu điểm tác phẩm.');await Promise.all([loadDbWorks(),loadScoreWorks()]);document.getElementById('scoreWorkOption').value=String(workId);selectWorkToScore();
+    }catch(error){alert(error.message||'Không lưu được điểm.');}
+  }
+
+  window.onload = function() { loadDbWorks(); loadScoreWorks(); loadDashboardSchools(); refreshAccountHeader(); };
+</script>
+</body>
+</html>
