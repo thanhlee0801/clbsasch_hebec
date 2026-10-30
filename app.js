@@ -141,9 +141,9 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Route Phục vụ Giao diện HTML
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'clbsach', 'clb_sach_trang_chinh_sidebar_tuong_tac_giao_vien.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'clbsach', 'index.html')));
 // Legacy URL used by clients that still request the HTML from the project root.
-app.get('/clb_sach_trang_chinh_sidebar_tuong_tac_giao_vien.html', (req, res) => res.sendFile(path.join(__dirname, 'clbsach', 'clb_sach_trang_chinh_sidebar_tuong_tac_giao_vien.html')));
+app.get('/clb_sach_trang_chinh_sidebar_tuong_tac_giao_vien.html', (req, res) => res.sendFile(path.join(__dirname, 'clbsach', 'index.html')));
 app.get('/school-admin', (req, res) => res.sendFile(path.join(__dirname, 'clbsach', 'clb_sach_admin.html')));
 app.get('/store', (req, res) => res.sendFile(path.join(__dirname, 'Websie_banhang', 'nha_sach_hebec_home.html')));
 app.get('/store-admin', (req, res) => res.sendFile(path.join(__dirname, 'Websie_banhang', 'nha_sach_hebec_admin.html')));
